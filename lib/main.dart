@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:untitled/blocs/bloc_conversation/conversation_bloc.dart';
 import 'package:untitled/blocs/bloc_lesson/lesson_bloc.dart';
 import 'package:untitled/views/screens/list_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +11,9 @@ void main() {
       providers: [
         BlocProvider(
           create: (context) => LessonBloc(),
+        ),
+        BlocProvider(
+          create: (context) => ConversationBloc(),
         ),
       ],
       child: const MyApp()),);
