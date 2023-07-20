@@ -51,7 +51,6 @@ class LessonBloc extends Bloc<LessonEvent, LessonState> {
               await AudioHelper.instance.getPathFileAudio(event.lesson.mp3);
           await audioPlayer.setFilePath(pathAudio,
               initialPosition: event.lesson.durationCurrent);
-          await audioPlayer.setSpeed(5);
           await audioPlayer.play();
         }
       } catch (e) {
@@ -107,24 +106,7 @@ class LessonBloc extends Bloc<LessonEvent, LessonState> {
               isPlaying: true,
               lessonPlaying: lessonNow,
               audioPlayer: audioPlayer));
-          // if(event.duration == stateNow.lessonPlaying.durationMax) {
-          //   var list = stateNow.listLessons.map((e) {
-          //     return e.copyWith(isPlaying: false, durationCurrent: const Duration(seconds: 0));
-          //   }).toList();
-          //
-          //   int currentIndex = list.indexWhere((e) => e.id == stateNow.lessonPlaying.id);
-          //   int nextIndex = currentIndex + 1 < list.length ? currentIndex +1 : 0;
-          //   list[nextIndex].isPlaying = true;
-          //   final lessonNow = list[nextIndex];
-          //
-          //   emit(LessonLoaded(listLessons:  list, isPlaying: true , lessonPlaying: lessonNow, audioPlayer: audioPlayer));
-          //   final pathAudio = await AudioHelper.instance.getPathFileAudio(lessonNow.mp3);
-          //   await audioPlayer.setFilePath(pathAudio , initialPosition:  lessonNow.durationCurrent);
-          //   await audioPlayer.play();
-          // }
-          // else {
-          //
-          // }
+
         }
       } catch (e) {
         print(e);
@@ -156,6 +138,28 @@ class LessonBloc extends Bloc<LessonEvent, LessonState> {
           await audioPlayer.setFilePath(pathAudio,
               initialPosition: lessonNow.durationCurrent);
           await audioPlayer.play();
+        }
+      } catch (e) {
+        print(e);
+      }
+    });
+
+    on<LessonInitAgain>((event, emit) async {
+      try {
+        if (state is LessonLoaded) {
+          var stateNow = state as LessonLoaded;
+          var list = stateNow.listLessons.map((e) {
+            return e.copyWith(
+                isPlaying: false, durationCurrent: const Duration(seconds: 0));
+          }).toList();
+
+          final item = list.firstWhere((element) => element.id == event.lesson.id);
+          emit(LessonLoaded(
+              listLessons: list,
+              isPlaying: false,
+              lessonPlaying: item,
+              audioPlayer: audioPlayer));
+
         }
       } catch (e) {
         print(e);

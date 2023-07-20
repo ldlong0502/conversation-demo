@@ -47,8 +47,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-
   void _gotoListScreen()  async {
+
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => const ListScreen()));
   }

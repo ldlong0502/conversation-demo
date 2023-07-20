@@ -35,3 +35,10 @@ class LessonPlayNext extends LessonEvent {
   @override
   List<Object> get props => [];
 }
+
+class LessonInitAgain extends LessonEvent {
+  final Lesson lesson;
+  const LessonInitAgain({required this.lesson});
+  @override
+  List<Object> get props => [lesson];
+}

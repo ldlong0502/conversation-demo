@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:untitled/models/lesson.dart';
 import 'package:untitled/views/screens/conversation_screen.dart';
 
+import '../../blocs/bloc_conversation/conversation_bloc.dart';
 import '../widgets/circle_progress_bar.dart';
 
 class ListScreen extends StatefulWidget {
@@ -15,17 +16,22 @@ class ListScreen extends StatefulWidget {
 }
 
 class _ListScreenState extends State<ListScreen> {
+
+  bool isLoading = true;
   @override
   void initState() {
     super.initState();
     context
         .read<LessonBloc>()
         .add(const GetAllLessons());
+    setState(() {
+      isLoading = false;
+    });
     }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return isLoading ? Container() : Scaffold(
       backgroundColor: Colors.white.withOpacity(0.99),
       body: Stack(
         children: [
@@ -191,7 +197,10 @@ class _ListScreenState extends State<ListScreen> {
 
   lessonItem(Lesson item) {
     return InkWell(
-      onTap: (){
+      onTap: () async{
+        print('long' + item.id.toString());
+        context.read<LessonBloc>().add(LessonStopped());
+
         Navigator.push(context, MaterialPageRoute(builder: (context) =>  ConversationScreen(lesson: item,)));
       },
       child: Row(
@@ -208,6 +217,7 @@ class _ListScreenState extends State<ListScreen> {
                       }
                       else {
                         context.read<LessonBloc>().add(LessonStopped());
+                        Navigator.push(context, MaterialPageRoute(builder: (context) =>  ConversationScreen(lesson: item,)));
                       }
                       await Future.delayed(const Duration(seconds: 1));
                     },
@@ -249,8 +259,8 @@ class _ListScreenState extends State<ListScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(item.title, style: kTitle,),
-                Text(item.vi, style: kSubTitle,),
+                Text(item.vi, style: kTitle,),
+                Text(item.title, style: kSubTitle,),
               ],
             ),
           ),

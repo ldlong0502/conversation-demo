@@ -3,10 +3,12 @@ import 'package:untitled/models/lesson.dart';
 import 'package:untitled/views/widgets/circle_action.dart';
 import 'package:untitled/views/widgets/conversation_item_left.dart';
 import 'package:untitled/views/widgets/conversation_item_right.dart';
+import 'package:untitled/views/widgets/slider_progress.dart';
 
 import '../../blocs/bloc_conversation/conversation_bloc.dart';
 import '../../constants/constants.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 class ConversationScreen extends StatefulWidget {
   const ConversationScreen({Key? key, required this.lesson}) : super(key: key);
   final Lesson lesson;
@@ -16,51 +18,69 @@ class ConversationScreen extends StatefulWidget {
 }
 
 class _ConversationScreenState extends State<ConversationScreen> {
-  double _sliderValue = 0.0;
+  bool isLoading = true;
+  final ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    context
-        .read<ConversationBloc>()
-        .add( GetAllConversations(idLesson:  widget.lesson.id));
+    context.read<ConversationBloc>()
+        .add(GetAllConversations(idLesson: widget.lesson.id));
+    setState(() {
+      isLoading = false;
+    });
+  }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _scrollController.dispose();
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white.withOpacity(0.99),
-      body: Stack(
-        children: [
-          listConversationsScroll(),
-          headerPlayer(context),
-        ],
-      ),
-    );
+    return isLoading
+        ? Container()
+        : Scaffold(
+            backgroundColor: Colors.white.withOpacity(0.99),
+            body: Stack(
+              children: [
+                listConversationsScroll(),
+                headerPlayer(context),
+              ],
+            ),
+          );
   }
 
   listConversationsScroll() {
     return BlocBuilder<ConversationBloc, ConversationState>(
-      builder: (context, state) {
-        if(state is ConversationLoaded){
-          return Padding(
-            padding: const EdgeInsets.only(top: 200, right: 10, left: 10),
-            child: ListView.builder(
-                physics: const BouncingScrollPhysics(),
-                itemCount: state.listConversations.length,
-                itemBuilder: (context, idx) {
-                  if( state.listConversations[idx].character == 'A') {
-                    return ConversationItemLeft(cons: state.listConversations[idx],);
-                  }
-                  else {
-                    return ConversationItemRight(cons: state.listConversations[idx],);
-                  }
-                }),
-          );
-        }else {
-          return Container();
-        }
+        builder: (context, state) {
+      if (state is ConversationLoaded) {
+
+        return Padding(
+          padding: const EdgeInsets.only(top: 200, right: 10, left: 10),
+          child: ListView.builder(
+            controller: _scrollController,
+              physics: const BouncingScrollPhysics(),
+              itemCount: state.listConversations.length,
+              itemBuilder: (context, idx) {
+                if (state.listConversations[idx].character == 'A') {
+                  return ConversationItemLeft(
+                    cons: state.listConversations[idx],
+                    state: state,
+                  );
+                } else {
+                  return ConversationItemRight(
+                    cons: state.listConversations[idx],
+                    state: state,
+                  );
+                }
+              }),
+        );
+      } else {
+        return Container();
       }
-    );
+    });
   }
 
   headerPlayer(BuildContext context) {
@@ -76,21 +96,29 @@ class _ConversationScreenState extends State<ConversationScreen> {
         ],
         color: primaryColor,
       ),
-      child: Column(
-        children: [
-          const SizedBox(
-            height: 20,
-          ),
-          headerTitle(context),
-          const SizedBox(
-            height: 20,
-          ),
-          middleAction(),
-          const SizedBox(
-            height: 20,
-          ),
-          sliderPlay(),
-        ],
+      child: BlocBuilder<ConversationBloc, ConversationState>(
+        builder: (context, state) {
+          if (state is ConversationLoaded) {
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 20,
+                ),
+                headerTitle(context),
+                const SizedBox(
+                  height: 20,
+                ),
+                middleAction(),
+                const SizedBox(
+                  height: 20,
+                ),
+                SliderProgress(lesson: widget.lesson , state: state, scrollController: _scrollController,),
+              ],
+            );
+          } else {
+            return Container();
+          }
+        },
       ),
     );
   }
@@ -129,50 +157,40 @@ class _ConversationScreenState extends State<ConversationScreen> {
   }
 
   middleAction() {
-    return const Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        CircleAction(),
-        CircleAction(),
-        CircleAction(),
-        CircleAction(),
-      ],
-    );
-  }
+    return BlocBuilder<ConversationBloc, ConversationState>(
+      builder: (context, state) {
+       if(state is ConversationLoaded) {
+         return  Row(
+           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+           children: [
+             CircleAction(
+               icon: Icons.closed_caption_off_rounded,
+               color: state.isBlur ? secondaryColor : thirdColor,
 
-  sliderPlay() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Container(
-          height: 25,
-          width: 25,
-          margin: const EdgeInsets.symmetric(horizontal: 10),
-          decoration: const BoxDecoration(
-              shape: BoxShape.circle, color: secondaryColor),
-          alignment: Alignment.center,
-          child: const Icon(Icons.pause, color: Colors.white, size: 20),
-        ),
-        Flexible(
-          child: SliderTheme(
-            data: const SliderThemeData(
-              trackHeight: 0.5,
-              overlayShape: RoundSliderOverlayShape(overlayRadius: 12.0),
-              thumbShape: RoundSliderThumbShape(enabledThumbRadius: 5.0),
-            ),
-            child: Slider(
-              value: _sliderValue,
-              thumbColor: secondaryColor,
-              activeColor: secondaryColor,
-              onChanged: (value) {
-                setState(() {
-                  _sliderValue = value;
-                });
-              },
-            ),
-          ),
-        ),
-      ],
+               index: 1,
+             ),
+             CircleAction(
+               icon: Icons.translate_outlined,
+               color: state.isTranslate ? secondaryColor : thirdColor,
+               index: 2
+             ),
+             CircleAction(
+               icon: Icons.spellcheck_sharp,
+               color: state.isPhonetic ? secondaryColor : thirdColor,
+                 index: 3
+             ),
+             CircleAction(
+               icon: Icons.speed_outlined,
+               color: state.isSpeed ? secondaryColor : thirdColor,
+                 index: 4
+             ),
+           ],
+         );
+       }
+       else {
+         return Container();
+       }
+      }
     );
   }
 }

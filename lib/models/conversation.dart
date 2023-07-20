@@ -45,14 +45,14 @@ class Conversation {
 
   factory Conversation.fromJson(Map<String, dynamic> json) {
     return Conversation(
-      id: json['id'],
+      id: json['id'] ,
       lesson: json['lesson'],
-      character: json['character'],
-      vi: json['vi'],
-      phonetic: json['phonetic'],
+      character: json['character'] ?? '',
+      vi: json['vi']?? '',
+      phonetic: json['phonetic'] ?? '',
       start: json['start'],
       end: json['end'],
-      furigana: json['furigana'],
+      furigana: json['furigana']?? '',
     );
   }
 
