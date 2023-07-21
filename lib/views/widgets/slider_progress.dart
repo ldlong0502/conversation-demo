@@ -40,11 +40,11 @@ class _SliderProgressState extends State<SliderProgress> {
     widget.state.audioPlayer.positionStream.listen((position) {
       if (!mounted) return;
       var pos = position.inMilliseconds.toDouble();
-      if (pos > widget.lesson.durationMax.inMilliseconds.toDouble()) {
+      if (pos >= widget.lesson.durationMax.inMilliseconds.toDouble()) {
 
         context
             .read<ConversationBloc>()
-            .add(const UpdateTimeHighLight(timeHighLight: 0));
+            .add( UpdateTimeHighLight(timeHighLight: 0, scrollController: widget.scrollController));
 
         context
             .read<ConversationBloc>()
@@ -54,10 +54,11 @@ class _SliderProgressState extends State<SliderProgress> {
         widget.state.audioPlayer.seek(const Duration(milliseconds: 0));
         widget.state.audioPlayer.pause();
 
+
       } else {
         context
             .read<ConversationBloc>()
-            .add(UpdateTimeHighLight(timeHighLight: pos));
+            .add(UpdateTimeHighLight(timeHighLight: pos, scrollController: widget.scrollController));
       }
     });
   }
@@ -82,17 +83,28 @@ class _SliderProgressState extends State<SliderProgress> {
                   .read<ConversationBloc>()
                   .add(const ConversationPlay(isPlaying: false));
             } else {
+
               context
                   .read<ConversationBloc>()
                   .add(const ConversationPlay(isPlaying: true));
+
             }
           },
           child: Container(
             height: 25,
             width: 25,
             margin: const EdgeInsets.symmetric(horizontal: 10),
-            decoration: const BoxDecoration(
-                shape: BoxShape.circle, color: secondaryColor),
+            decoration:  BoxDecoration(
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    offset: const Offset(0.0, 3.0),
+                    spreadRadius: 2,
+                    blurRadius: 4.0,
+                  ),
+                ],
+                color: secondaryColor),
             alignment: Alignment.center,
             child: Icon(widget.state.isPlaying ? Icons.pause : Icons.play_arrow,
                 color: Colors.white, size: 20),
@@ -114,13 +126,14 @@ class _SliderProgressState extends State<SliderProgress> {
               onChanged: (value) {
                 context
                     .read<ConversationBloc>()
-                    .add(UpdateTimeHighLight(timeHighLight: value));
+                    .add(UpdateTimeHighLight(timeHighLight: value , scrollController: widget.scrollController));
                 widget.state.audioPlayer
                     .seek(Duration(milliseconds: value.toInt()));
               },
             ),
           ),
         ),
+        const SizedBox(width: 20,)
       ],
     );
   }

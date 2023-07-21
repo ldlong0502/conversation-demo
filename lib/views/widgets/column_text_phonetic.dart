@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:blur/blur.dart';
 import '../../constants/constants.dart';
 
 class ColumnTextPhonetic extends StatelessWidget {

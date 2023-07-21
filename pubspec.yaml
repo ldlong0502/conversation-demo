@@ -54,7 +54,7 @@ dev_dependencies:
   just_audio: ^0.9.34
   path_provider: ^2.0.15
   dio: ^5.2.1+1
-  blur: ^3.1.0
+  shared_preferences: ^2.2.0
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

@@ -198,7 +198,7 @@ class _ListScreenState extends State<ListScreen> {
   lessonItem(Lesson item) {
     return InkWell(
       onTap: () async{
-        print('long' + item.id.toString());
+        print('long' + item.durationMax.inMilliseconds.toString());
         context.read<LessonBloc>().add(LessonStopped());
 
         Navigator.push(context, MaterialPageRoute(builder: (context) =>  ConversationScreen(lesson: item,)));

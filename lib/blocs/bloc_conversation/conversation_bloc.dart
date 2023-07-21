@@ -17,15 +17,18 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
     on<GetAllConversations>((event, emit) async {
       try {
         var list = await consRepo.getAllLessons(event.idLesson);
+        final isBlur = await consRepo.getBlur();
+        final isTranslate = await consRepo.getTranslate();
+        final isPhonetic = await consRepo.getPhonetic();
         emit(ConversationLoaded(
           listConversations: list,
           timePosition: 0,
           audioPlayer: audioPlayer,
           isPlaying: true,
-          isBlur: true,
+          isBlur: isBlur,
           isSpeed: false,
-          isTranslate: true,
-          isPhonetic: true,
+          isTranslate: isTranslate,
+          isPhonetic: isPhonetic,
         ));
       } catch (e) {
         print(e);
@@ -35,6 +38,7 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
     on<UpdateTimeHighLight>((event, emit) async {
       if (state is ConversationLoaded) {
         try {
+
           emit(ConversationLoaded(
             listConversations: (state as ConversationLoaded).listConversations,
             timePosition: event.timeHighLight,
@@ -45,6 +49,14 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
             isTranslate: (state as ConversationLoaded).isTranslate,
             isPhonetic: (state as ConversationLoaded).isPhonetic,
           ));
+          if (event.timeHighLight == 0) {
+            print('iiii');
+            event.scrollController.animateTo(
+             0, // Replace `itemHeight` with the height of each conversation item
+              duration: const Duration(milliseconds: 100),
+              curve: Curves.easeOut,
+            );
+          }
         } catch (e) {
           print(e);
         }
@@ -134,6 +146,15 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
     on<UpdateActionMiddle>((event, emit) async {
       if (state is ConversationLoaded) {
         try {
+          if(event.index == 1) {
+            await consRepo.setBlur(!(state as ConversationLoaded).isBlur);
+          }
+          else if(event.index == 2) {
+            await consRepo.setTranslate(!(state as ConversationLoaded).isTranslate);
+          }
+          else if(event.index == 3) {
+            await consRepo.setPhonetic(!(state as ConversationLoaded).isPhonetic);
+          }
           emit(ConversationLoaded(
             listConversations: (state as ConversationLoaded).listConversations,
             timePosition: (state as ConversationLoaded).timePosition,

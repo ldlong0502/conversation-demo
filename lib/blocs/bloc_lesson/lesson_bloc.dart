@@ -17,8 +17,11 @@ class LessonBloc extends Bloc<LessonEvent, LessonState> {
     on<GetAllLessons>((event, emit) async {
       try {
         var list = await lessonRepo.getAllLessons();
-        final duration = await AudioHelper.instance.getDuration('test');
-        list = list.map((e) => e.copyWith(durationMax: duration)).toList();
+
+        list = await Future.wait(list.map((e) async {
+          final duration = await AudioHelper.instance.getDuration(e.mp3);
+          return e.copyWith(durationMax: duration);
+        }));
         emit(LessonLoaded(
             listLessons: list,
             isPlaying: false,
@@ -106,7 +109,6 @@ class LessonBloc extends Bloc<LessonEvent, LessonState> {
               isPlaying: true,
               lessonPlaying: lessonNow,
               audioPlayer: audioPlayer));
-
         }
       } catch (e) {
         print(e);
@@ -153,13 +155,13 @@ class LessonBloc extends Bloc<LessonEvent, LessonState> {
                 isPlaying: false, durationCurrent: const Duration(seconds: 0));
           }).toList();
 
-          final item = list.firstWhere((element) => element.id == event.lesson.id);
+          final item =
+              list.firstWhere((element) => element.id == event.lesson.id);
           emit(LessonLoaded(
               listLessons: list,
               isPlaying: false,
               lessonPlaying: item,
               audioPlayer: audioPlayer));
-
         }
       } catch (e) {
         print(e);

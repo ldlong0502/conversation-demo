@@ -11,10 +11,11 @@ class GetAllConversations extends ConversationEvent {
 }
 
 class UpdateTimeHighLight extends ConversationEvent {
-  const UpdateTimeHighLight({required this.timeHighLight});
+  const UpdateTimeHighLight({required this.timeHighLight, required this.scrollController});
   final double timeHighLight;
+  final ScrollController scrollController;
   @override
-  List<Object> get props => [timeHighLight];
+  List<Object> get props => [timeHighLight, scrollController];
 }
 
 class ConversationPlay extends ConversationEvent {
