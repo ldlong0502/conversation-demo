@@ -18,10 +18,10 @@ class LessonBloc extends Bloc<LessonEvent, LessonState> {
       try {
         var list = await lessonRepo.getAllLessons();
 
-        list = await Future.wait(list.map((e) async {
-          final duration = await AudioHelper.instance.getDuration(e.mp3);
-          return e.copyWith(durationMax: duration);
-        }));
+        // list = await Future.wait(list.map((e) async {
+        //   final duration = await AudioHelper.instance.getDuration(e.mp3);
+        //   return e.copyWith(durationMax: duration);
+        // }));
         emit(LessonLoaded(
             listLessons: list,
             isPlaying: false,
@@ -36,15 +36,16 @@ class LessonBloc extends Bloc<LessonEvent, LessonState> {
       try {
         if (state is LessonLoaded) {
           print(111);
-          var list = (state as LessonLoaded).listLessons.map((e) {
+          var list =await  Future.wait((state as LessonLoaded).listLessons.map((e) async {
             if (e.id == event.lesson.id) {
-              return e.copyWith(isPlaying: true);
+              final duration = await AudioHelper.instance.getDuration(e.mp3);
+              return e.copyWith(isPlaying: true , durationMax: duration);
             } else {
               return e.copyWith(
                   isPlaying: false,
                   durationCurrent: const Duration(seconds: 0));
             }
-          }).toList();
+          }).toList());
           emit(LessonLoaded(
               listLessons: list,
               isPlaying: true,
@@ -129,11 +130,18 @@ class LessonBloc extends Bloc<LessonEvent, LessonState> {
           int nextIndex = currentIndex + 1 < list.length ? currentIndex + 1 : 0;
           list[nextIndex].isPlaying = true;
           final lessonNow = list[nextIndex];
-
+          final duration = await AudioHelper.instance.getDuration(lessonNow.mp3);
+           list = list.map((e) {
+            if (e.id == lessonNow.id) {
+              return e.copyWith(durationMax: duration);
+            } else {
+              return e;
+            }
+          }).toList();
           emit(LessonLoaded(
               listLessons: list,
               isPlaying: true,
-              lessonPlaying: lessonNow,
+              lessonPlaying: lessonNow.copyWith(durationMax: duration),
               audioPlayer: audioPlayer));
           final pathAudio =
               await AudioHelper.instance.getPathFileAudio(lessonNow.mp3);
@@ -157,6 +165,32 @@ class LessonBloc extends Bloc<LessonEvent, LessonState> {
 
           final item =
               list.firstWhere((element) => element.id == event.lesson.id);
+          emit(LessonLoaded(
+              listLessons: list,
+              isPlaying: false,
+              lessonPlaying: item,
+              audioPlayer: audioPlayer));
+        }
+      } catch (e) {
+        print(e);
+      }
+    });
+
+    on<LessonUpdateDurationMax>((event, emit) async {
+      try {
+        if (state is LessonLoaded) {
+          var stateNow = state as LessonLoaded;
+          var list = await  Future.wait((state as LessonLoaded).listLessons.map((e) async {
+            if (e.id == event.lesson.id) {
+              final duration = await AudioHelper.instance.getDuration(e.mp3);
+              return e.copyWith(durationMax: duration);
+            } else {
+              return e.copyWith(
+                  durationCurrent: const Duration(seconds: 0));
+            }
+          }).toList());
+          final item =
+          list.firstWhere((element) => element.id == event.lesson.id);
           emit(LessonLoaded(
               listLessons: list,
               isPlaying: false,

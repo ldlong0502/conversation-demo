@@ -16,7 +16,7 @@ class LessonRepository {
   final DataHelper dataHelper = DataHelper.instance;
   Future<List<Lesson>> getAllLessons() async{
 
-    final List<Map<String, dynamic>> result = await dataHelper.queryAllRows('SELECT * FROM lesson where level = 51');
+    final List<Map<String, dynamic>> result = await dataHelper.queryAllRows('SELECT * FROM lesson where level = 51 or level = 52 or level = 53 ');
     final listLessons = result.map((row) => Lesson.fromJson(row)).toList();
     return listLessons;
   }

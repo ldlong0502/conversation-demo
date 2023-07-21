@@ -52,8 +52,8 @@ class _CircularProgressBarState extends State<CircularProgressBar> {
         widget.durationCurrent.inMilliseconds / widget.durationMax.inMilliseconds;
     print(progress);
     return SizedBox(
-      height: 35,
-      width: 35,
+      height: 30,
+      width: 30,
       child: CircularProgressIndicator(
         value: progress,
         strokeWidth: 3,

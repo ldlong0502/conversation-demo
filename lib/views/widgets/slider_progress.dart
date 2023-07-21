@@ -25,6 +25,7 @@ class SliderProgress extends StatefulWidget {
 
 class _SliderProgressState extends State<SliderProgress> {
   void initPlayer() async {
+
     final pathAudio =
         await AudioHelper.instance.getPathFileAudio(widget.lesson.mp3);
     await widget.state.audioPlayer

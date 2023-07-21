@@ -41,11 +41,12 @@ class Lesson {
 
   factory Lesson.fromJson(Map<String, dynamic> json) {
     return Lesson(
-        id: json['id'],
-        title: json['title'],
-        level: json['level'],
-        vi: json['vi'],
-        mp3: json['mp3']);
+        id: json['id'] ?? 0,
+        title: json['title'] ?? '',
+        level: json['level'] ?? '',
+        vi: json['vi'] ?? '',
+        mp3: json['mp3'] ?? '',
+    );
   }
 
   Map<String, dynamic> toJson() {

@@ -42,3 +42,9 @@ class LessonInitAgain extends LessonEvent {
   @override
   List<Object> get props => [lesson];
 }
+class LessonUpdateDurationMax extends LessonEvent {
+  final Lesson lesson;
+  const LessonUpdateDurationMax({required this.lesson});
+  @override
+  List<Object> get props => [lesson];
+}

@@ -6,6 +6,7 @@ import 'package:untitled/models/lesson.dart';
 import 'package:untitled/views/screens/conversation_screen.dart';
 
 import '../../blocs/bloc_conversation/conversation_bloc.dart';
+import '../../repositories/audio_helper.dart';
 import '../widgets/circle_progress_bar.dart';
 
 class ListScreen extends StatefulWidget {
@@ -17,28 +18,34 @@ class ListScreen extends StatefulWidget {
 
 class _ListScreenState extends State<ListScreen> {
 
-  bool isLoading = true;
   @override
   void initState() {
     super.initState();
     context
         .read<LessonBloc>()
         .add(const GetAllLessons());
-    setState(() {
-      isLoading = false;
-    });
     }
 
   @override
   Widget build(BuildContext context) {
-    return isLoading ? Container() : Scaffold(
-      backgroundColor: Colors.white.withOpacity(0.99),
-      body: Stack(
-        children: [
-          listViewScroll(),
-          headerPlayer(context),
-        ],
-      ),
+    return BlocBuilder<LessonBloc, LessonState>(
+      builder: (context, state) {
+        if(state is LessonLoaded){
+          return Scaffold(
+            backgroundColor: Colors.white.withOpacity(0.99),
+            body: Stack(
+              children: [
+                listViewScroll(),
+                headerPlayer(context),
+              ],
+            ),
+          );
+        }
+        else {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),);
+        }
+      }
     );
   }
 
@@ -194,79 +201,92 @@ class _ListScreenState extends State<ListScreen> {
       ],
     );
   }
-
+  _goToConversation(Lesson item) async {
+    context.read<ConversationBloc>()
+        .add(GetAllConversations(idLesson: item.id));
+    // context.read<LessonBloc>()
+    //     .add(LessonUpdateDurationMax(lesson: item));
+    final duration =  await AudioHelper.instance.getDuration(item.mp3);
+    Navigator.push(context, MaterialPageRoute(builder: (context) =>  ConversationScreen(lesson: item.copyWith(durationMax: duration),)));
+  }
   lessonItem(Lesson item) {
-    return InkWell(
-      onTap: () async{
-        print('long' + item.durationMax.inMilliseconds.toString());
-        context.read<LessonBloc>().add(LessonStopped());
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(30),
+        onTap: () async {
+          print('long' + item.durationMax.inMilliseconds.toString());
+          context.read<LessonBloc>().add(LessonStopped());
+          _goToConversation(item);
+        },
+        child: SizedBox(
+            child: Row(
+              children: [
+                Expanded(
+                  child: BlocBuilder<LessonBloc, LessonState>(
+                    builder: (context, state) {
+                      if (state is LessonLoaded) {
+                        return GestureDetector(
+                          onTap: () async {
+                            if (!item.isPlaying) {
+                              context.read<LessonBloc>().add(
+                                  LessonListening(lesson: item));
+                            }
+                            else {
+                              context.read<LessonBloc>().add(LessonStopped());
+                              _goToConversation(item);
+                            }
+                          },
 
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>  ConversationScreen(lesson: item,)));
-      },
-      child: Row(
-        children: [
-          Expanded(
-            child: BlocBuilder<LessonBloc, LessonState>(
-              builder: (context, state) {
-                if (state is LessonLoaded) {
-                  return InkWell(
-                    onTap: () async {
-                      if (!item.isPlaying) {
-                        context.read<LessonBloc>().add(
-                            LessonListening(lesson: item));
+                          child: item.isPlaying ? Container(
+                            height: 25,
+                            width: 25,
+
+                            margin: const EdgeInsets.symmetric(horizontal: 10),
+                            alignment: Alignment.center,
+                            child: CircularProgressBar(
+                              audioPlayer: state.audioPlayer,
+                              durationCurrent: item.durationCurrent,
+                              durationMax: item.durationMax,
+                            ),
+                          ) : Container(
+                            height: 35,
+                            width: 35,
+                            margin: const EdgeInsets.symmetric(horizontal: 10),
+                            decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: secondaryColor
+                            ),
+                            alignment: Alignment.center,
+                            child: Icon(
+                                item.isPlaying ? Icons.pause : Icons.play_arrow,
+                                color: Colors.white, size: 30),
+                          ),
+                        );
                       }
                       else {
-                        context.read<LessonBloc>().add(LessonStopped());
-                        Navigator.push(context, MaterialPageRoute(builder: (context) =>  ConversationScreen(lesson: item,)));
+                        return Container();
                       }
-                      await Future.delayed(const Duration(seconds: 1));
                     },
-                    child: item.isPlaying ? Container(
-                      height: 25,
-                      width: 25,
-
-                      margin: const EdgeInsets.symmetric(horizontal: 10),
-                      alignment: Alignment.center,
-                      child: CircularProgressBar(
-                        audioPlayer: state.audioPlayer,
-                        durationCurrent: item.durationCurrent,
-                        durationMax: item.durationMax,
-                      ),
-                    ) : Container(
-                      height: 35,
-                      width: 35,
-                      margin: const EdgeInsets.symmetric(horizontal: 10),
-                      decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: secondaryColor
-                      ),
-                      alignment: Alignment.center,
-                      child: Icon(
-                          item.isPlaying ? Icons.pause : Icons.play_arrow,
-                          color: Colors.white, size: 30),
-                    ),
-                  );
-                }
-                else {
-                  return Container();
-                }
-              },
-            ),
-          ),
-          Expanded(
-            flex: 5,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(item.vi, style: kTitle,),
-                Text(item.title, style: kSubTitle,),
+                  ),
+                ),
+                Expanded(
+                  flex: 5,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(item.vi, style: kTitle, maxLines: 1),
+                      Text(item.title, style: kSubTitle,),
+                    ],
+                  ),
+                ),
+                const Expanded(child: Icon(
+                  Icons.navigate_next_outlined, size: 30, color: secondaryColor,)),
               ],
             ),
           ),
-          const Expanded(child: Icon(
-            Icons.navigate_next_outlined, size: 30, color: secondaryColor,)),
-        ],
+
       ),
     );
   }

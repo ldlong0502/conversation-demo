@@ -18,7 +18,6 @@ class ConversationScreen extends StatefulWidget {
 }
 
 class _ConversationScreenState extends State<ConversationScreen> {
-  bool isLoading = true;
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -27,9 +26,6 @@ class _ConversationScreenState extends State<ConversationScreen> {
     super.initState();
     context.read<ConversationBloc>()
         .add(GetAllConversations(idLesson: widget.lesson.id));
-    setState(() {
-      isLoading = false;
-    });
   }
   @override
   void dispose() {
@@ -39,9 +35,10 @@ class _ConversationScreenState extends State<ConversationScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    return isLoading
-        ? Container()
-        : Scaffold(
+    return BlocBuilder<ConversationBloc, ConversationState>(
+      builder: (context, state) {
+        if(state is ConversationLoaded){
+          return Scaffold(
             backgroundColor: Colors.white.withOpacity(0.99),
             body: Stack(
               children: [
@@ -50,6 +47,12 @@ class _ConversationScreenState extends State<ConversationScreen> {
               ],
             ),
           );
+        }
+        else {
+          return Container();
+        }
+      }
+    );
   }
 
   listConversationsScroll() {

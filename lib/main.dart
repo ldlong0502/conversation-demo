@@ -10,9 +10,11 @@ void main() {
   runApp( MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => LessonBloc(),
+          lazy: false,
+          create: (context) => LessonBloc()..add(const GetAllLessons()),
         ),
         BlocProvider(
+          lazy: false,
           create: (context) => ConversationBloc(),
         ),
       ],
