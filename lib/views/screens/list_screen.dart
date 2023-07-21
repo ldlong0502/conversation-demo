@@ -277,7 +277,7 @@ class _ListScreenState extends State<ListScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(item.vi, style: kTitle, maxLines: 1),
-                      Text(item.title, style: kSubTitle,),
+                      Text(item.title, style: kSubTitle, maxLines: 1),
                     ],
                   ),
                 ),

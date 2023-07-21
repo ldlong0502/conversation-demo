@@ -23,7 +23,7 @@ class ConversationLoaded extends ConversationState {
   final bool isSpeed;
   final bool isTranslate;
   final bool isPhonetic;
-
+  final List<ItemPosition> itemPositions;
   const ConversationLoaded(
       {required this.listConversations,
       required this.audioPlayer,
@@ -32,7 +32,8 @@ class ConversationLoaded extends ConversationState {
       required this.isBlur,
       required this.isPhonetic,
       required this.isSpeed,
-      required this.isTranslate});
+      required this.isTranslate,
+      required this.itemPositions});
 
   @override
   List<Object> get props => [
@@ -43,6 +44,7 @@ class ConversationLoaded extends ConversationState {
         isBlur,
         isPhonetic,
         isTranslate,
-        isSpeed
+        isSpeed,
+        itemPositions,
       ];
 }

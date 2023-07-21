@@ -7,7 +7,7 @@ import '../../models/lesson.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../repositories/audio_helper.dart';
-
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 class SliderProgress extends StatefulWidget {
   const SliderProgress(
       {Key? key,
@@ -17,7 +17,7 @@ class SliderProgress extends StatefulWidget {
       : super(key: key);
   final Lesson lesson;
   final ConversationLoaded state;
-  final ScrollController scrollController;
+  final ItemScrollController scrollController;
 
   @override
   State<SliderProgress> createState() => _SliderProgressState();
@@ -42,16 +42,12 @@ class _SliderProgressState extends State<SliderProgress> {
       if (!mounted) return;
       var pos = position.inMilliseconds.toDouble();
       if (pos >= widget.lesson.durationMax.inMilliseconds.toDouble()) {
-
-        context
-            .read<ConversationBloc>()
-            .add( UpdateTimeHighLight(timeHighLight: 0, scrollController: widget.scrollController));
-
         context
             .read<ConversationBloc>()
             .add(const ConversationPlay(isPlaying: false));
-        context.read<LessonBloc>().add(
-            LessonInitAgain(lesson: widget.lesson));
+        context
+            .read<ConversationBloc>()
+            .add(UpdateTimeHighLight(timeHighLight: 0 , scrollController: widget.scrollController));
         widget.state.audioPlayer.seek(const Duration(milliseconds: 0));
         widget.state.audioPlayer.pause();
 

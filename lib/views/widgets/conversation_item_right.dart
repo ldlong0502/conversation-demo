@@ -28,7 +28,7 @@ class _ConversationItemRightState extends State<ConversationItemRight> {
           BlocBuilder<ConversationBloc, ConversationState>(
             builder: (context, state) {
               if (state is ConversationLoaded) {
-                bool isHighLight = checkHighLight(state.timePosition);
+                bool isHighLight = widget.cons.isHighLight;
                 return Container(
                   key: GlobalObjectKey(widget.cons.id),
                   constraints: BoxConstraints(
@@ -55,15 +55,12 @@ class _ConversationItemRightState extends State<ConversationItemRight> {
                     ],
                   ),
                   child: InkWell(
-                    onTap: (){
+                    onTap: () async {
                       context
                           .read<ConversationBloc>()
-                          .add(ClickItemConversation(start:  widget.cons.start.toDouble(), end: widget.cons.start.toDouble()));
-                      Scrollable.ensureVisible(
-                          GlobalObjectKey(widget.cons.id).currentContext!,
-                          duration: const Duration(milliseconds: 100),// duration for scrolling time
-                          alignment: .5, // 0 mean, scroll to the top, 0.5 mean, half
-                          curve: Curves.easeOut);
+                          .add(const ConversationPlay(isPlaying: true));
+                      state.audioPlayer.seek(Duration(milliseconds: widget.cons.start * 100));
+                      await state.audioPlayer.play();
                     },
                     child:widget.state.isTranslate ? Column(
                       children: [

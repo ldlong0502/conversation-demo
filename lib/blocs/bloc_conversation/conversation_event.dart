@@ -13,7 +13,7 @@ class GetAllConversations extends ConversationEvent {
 class UpdateTimeHighLight extends ConversationEvent {
   const UpdateTimeHighLight({required this.timeHighLight, required this.scrollController});
   final double timeHighLight;
-  final ScrollController scrollController;
+  final ItemScrollController scrollController;
   @override
   List<Object> get props => [timeHighLight, scrollController];
 }
@@ -45,4 +45,11 @@ class UpdateActionMiddle extends ConversationEvent {
   final int index;
   @override
   List<Object> get props => [ index];
+}
+
+class UpdateItemPositions extends ConversationEvent {
+  const UpdateItemPositions( {required this.items});
+  final List<ItemPosition> items;
+  @override
+  List<Object> get props => [ items];
 }

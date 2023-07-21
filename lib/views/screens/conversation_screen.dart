@@ -8,7 +8,7 @@ import 'package:untitled/views/widgets/slider_progress.dart';
 import '../../blocs/bloc_conversation/conversation_bloc.dart';
 import '../../constants/constants.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 class ConversationScreen extends StatefulWidget {
   const ConversationScreen({Key? key, required this.lesson}) : super(key: key);
   final Lesson lesson;
@@ -18,21 +18,25 @@ class ConversationScreen extends StatefulWidget {
 }
 
 class _ConversationScreenState extends State<ConversationScreen> {
-  final ScrollController _scrollController = ScrollController();
-
+  final ItemScrollController _scrollController = ItemScrollController();
+  final ItemPositionsListener itemListener = ItemPositionsListener.create();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     context.read<ConversationBloc>()
         .add(GetAllConversations(idLesson: widget.lesson.id));
+    itemListener.itemPositions.addListener(() {
+      final indices = itemListener.itemPositions.value.where((e) {
+        final isTopVisible = e.itemLeadingEdge >=0;
+        final isBottomVisible = e.itemTrailingEdge <=1;
+        return isTopVisible && isBottomVisible;
+      }).toList();
+      context.read<ConversationBloc>().add(UpdateItemPositions(items: indices));
+    });
   }
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    _scrollController.dispose();
-  }
+
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ConversationBloc, ConversationState>(
@@ -61,9 +65,10 @@ class _ConversationScreenState extends State<ConversationScreen> {
       if (state is ConversationLoaded) {
 
         return Padding(
-          padding: const EdgeInsets.only(top: 200, right: 10, left: 10),
-          child: ListView.builder(
-            controller: _scrollController,
+          padding: const EdgeInsets.only(top: 220, right: 10, left: 10),
+          child: ScrollablePositionedList.builder(
+            itemScrollController: _scrollController,
+              itemPositionsListener: itemListener,
               physics: const BouncingScrollPhysics(),
               itemCount: state.listConversations.length,
               itemBuilder: (context, idx) {
