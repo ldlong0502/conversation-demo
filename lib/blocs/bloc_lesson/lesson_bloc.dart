@@ -1,10 +1,13 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:untitled/repositories/lesson_repository.dart';
 import 'package:just_audio/just_audio.dart';
 import '../../models/lesson.dart';
 import '../../repositories/audio_helper.dart';
-
+import 'package:async/async.dart';
 part 'lesson_event.dart';
 
 part 'lesson_state.dart';
@@ -12,7 +15,7 @@ part 'lesson_state.dart';
 class LessonBloc extends Bloc<LessonEvent, LessonState> {
   final lessonRepo = LessonRepository.instance;
   AudioPlayer audioPlayer = AudioPlayer();
-
+  CancelableOperation?  _sub;
   LessonBloc() : super(LessonInitial()) {
     on<GetAllLessons>((event, emit) async {
       try {
@@ -31,31 +34,80 @@ class LessonBloc extends Bloc<LessonEvent, LessonState> {
         print(e);
       }
     });
+    Future<Duration> _loadData(Lesson lesson) async {
+      return await AudioHelper.instance.getDuration(lesson.mp3);
+    }
+    on<LessonDownloadMp3>((event, emit) async {
+      try {
+        if (state is LessonLoaded) {
+          if(_sub != null) {
+            final result = await _sub?.cancel();
+            if(result != null)
+            {
+              await File(await AudioHelper.instance.getPathFileAudio(result)).delete(recursive: true);
+            }
 
+          }
+          var stateNow = state as LessonLoaded;
+          print( 'long'+ stateNow.lessonPlaying.id.toString());
+          _sub = CancelableOperation.fromFuture(
+            _loadData(event.lesson),
+            onCancel: () => event.lesson.mp3,
+          );
+          final duration = await _sub?.value;
+          _sub = null;
+          final list = (state
+          as LessonLoaded).listLessons.map((e)  {
+            if (e.id == event.lesson.id) {
+              print(55555);
+              return e.copyWith( isPlaying: true, isLoading:false ,durationMax: duration);
+            } else {
+              return e;
+            }
+          }).toList();
+          final item =
+          list.firstWhere((element) => element.id == event.lesson.id);
+          emit(LessonLoaded(
+              listLessons: list,
+              isPlaying: true,
+              lessonPlaying: item,
+              audioPlayer: audioPlayer));
+          final pathAudio =
+          await AudioHelper.instance.getPathFileAudio(event.lesson.mp3);
+          await audioPlayer.setFilePath(pathAudio,
+              initialPosition: event.lesson.durationCurrent);
+          await audioPlayer.play();
+        }
+      } catch (e) {
+        print(e);
+      }
+    });
     on<LessonListening>((event, emit) async {
       try {
         if (state is LessonLoaded) {
           print(111);
-          var list =await  Future.wait((state as LessonLoaded).listLessons.map((e) async {
+          var list = (state as LessonLoaded).listLessons.map((e)  {
             if (e.id == event.lesson.id) {
-              final duration = await AudioHelper.instance.getDuration(e.mp3);
-              return e.copyWith(isPlaying: true , durationMax: duration);
+              // final duration = await AudioHelper.instance.getDuration(e.mp3);
+              return e.copyWith(isPlaying: true , isLoading: true);
             } else {
               return e.copyWith(
                   isPlaying: false,
                   durationCurrent: const Duration(seconds: 0));
             }
-          }).toList());
+          }).toList();
+          final item =
+          list.firstWhere((element) => element.id == event.lesson.id);
           emit(LessonLoaded(
               listLessons: list,
               isPlaying: true,
-              lessonPlaying: event.lesson,
+              lessonPlaying: item,
               audioPlayer: audioPlayer));
-          final pathAudio =
-              await AudioHelper.instance.getPathFileAudio(event.lesson.mp3);
-          await audioPlayer.setFilePath(pathAudio,
-              initialPosition: event.lesson.durationCurrent);
-          await audioPlayer.play();
+          // final pathAudio =
+          //     await AudioHelper.instance.getPathFileAudio(event.lesson.mp3);
+          // await audioPlayer.setFilePath(pathAudio,
+          //     initialPosition: event.lesson.durationCurrent);
+          // await audioPlayer.play();
         }
       } catch (e) {
         print(e);

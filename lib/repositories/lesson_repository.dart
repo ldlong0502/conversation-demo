@@ -5,7 +5,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart' as p;
 import 'package:flutter/services.dart' show rootBundle;
 
-import 'data_helper.dart';
+import 'database_listening_helper.dart';
 class LessonRepository {
   LessonRepository._privateConstructor();
 
@@ -13,7 +13,7 @@ class LessonRepository {
 
   static LessonRepository get instance => _instance;
 
-  final DataHelper dataHelper = DataHelper.instance;
+  final DatabaseListeningHelper dataHelper = DatabaseListeningHelper.instance;
   Future<List<Lesson>> getAllLessons() async{
 
     final List<Map<String, dynamic>> result = await dataHelper.queryAllRows('SELECT * FROM lesson where level = 51 or level = 52 or level = 53 ');

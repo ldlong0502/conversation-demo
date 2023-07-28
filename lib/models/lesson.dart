@@ -5,6 +5,7 @@ class Lesson {
   final String vi;
   final String mp3;
   bool isPlaying = false;
+  bool isLoading = false;
   Duration durationMax = const Duration(seconds: 0);
   Duration durationCurrent = const Duration(seconds: 0);
 
@@ -15,6 +16,7 @@ class Lesson {
       required this.vi,
       required this.mp3,
       this.isPlaying = false,
+        this.isLoading = false,
       this.durationMax = const Duration(seconds: 0),
       this.durationCurrent = const Duration(seconds: 0)});
 
@@ -25,6 +27,7 @@ class Lesson {
       String? vi,
       String? mp3,
       bool? isPlaying,
+        bool? isLoading,
       Duration? durationMax,
       Duration? durationCurrent}) {
     return Lesson(
@@ -34,6 +37,7 @@ class Lesson {
       vi: vi ?? this.vi,
       mp3: mp3 ?? this.mp3,
       isPlaying: isPlaying ?? this.isPlaying,
+      isLoading: isLoading ?? this.isLoading,
       durationMax: durationMax ?? this.durationMax,
       durationCurrent: durationCurrent ?? this.durationCurrent,
     );

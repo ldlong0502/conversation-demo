@@ -34,7 +34,27 @@ class AudioHelper {
       }
     }
   }
+  Future<String> getPathFileVocabulary(String idVoc) async {
+    String localFilePath = await getLocalFilePath();
+    final destinationDir = Directory('$localFilePath/vocabularies_audio');
+    destinationDir.createSync(recursive: true);
+    File file = File('$localFilePath/vocabularies_audio/$idVoc');
+    if (await file.exists()) {
+      return file.path; // Trả về đường dẫn tệp nếu nó đã tồn tại
+    } else {
 
+      try {
+        Dio dio = Dio();
+        Response response = await dio.get(api.getLinkMp3Vocabulary(idVoc),
+            options: Options(responseType: ResponseType.bytes));
+        await file.writeAsBytes(response.data);
+        return file.path; // Trả về đường dẫn tệp sau khi đã tải xuống
+      } catch (e) {
+        print('Lỗi khi tải xuống tệp: $e');
+        return '';
+      }
+    }
+  }
   Future<Duration> getDuration(String mp3) async {
     AudioPlayer audioPlayer = AudioPlayer();
     String localFilePath = await getLocalFilePath();

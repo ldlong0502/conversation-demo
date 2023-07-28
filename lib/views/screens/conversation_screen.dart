@@ -32,6 +32,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
         final isBottomVisible = e.itemTrailingEdge <=1;
         return isTopVisible && isBottomVisible;
       }).toList();
+      print(indices);
       context.read<ConversationBloc>().add(UpdateItemPositions(items: indices));
     });
   }
@@ -65,11 +66,14 @@ class _ConversationScreenState extends State<ConversationScreen> {
       if (state is ConversationLoaded) {
 
         return Padding(
-          padding: const EdgeInsets.only(top: 220, right: 10, left: 10),
+          padding: const EdgeInsets.only(top: 200, right: 10, left: 10),
           child: ScrollablePositionedList.builder(
+            padding: const EdgeInsets.only(top: 20 , bottom: 50),
             itemScrollController: _scrollController,
               itemPositionsListener: itemListener,
-              physics: const BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(
+                decelerationRate: ScrollDecelerationRate.fast,
+              ),
               itemCount: state.listConversations.length,
               itemBuilder: (context, idx) {
                 if (state.listConversations[idx].character == 'A') {

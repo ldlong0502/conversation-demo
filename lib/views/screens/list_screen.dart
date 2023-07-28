@@ -170,6 +170,8 @@ class _ListScreenState extends State<ListScreen> {
                       else {
                         context.read<LessonBloc>().add(
                             LessonListening(lesson: state.lessonPlaying));
+                        context.read<LessonBloc>().add(
+                            LessonDownloadMp3(lesson: state.lessonPlaying));
                       }
                       await Future.delayed(const Duration(seconds: 1));
                     },
@@ -231,6 +233,8 @@ class _ListScreenState extends State<ListScreen> {
                             if (!item.isPlaying) {
                               context.read<LessonBloc>().add(
                                   LessonListening(lesson: item));
+                              context.read<LessonBloc>().add(
+                                  LessonDownloadMp3(lesson: item));
                             }
                             else {
                               context.read<LessonBloc>().add(LessonStopped());
@@ -238,7 +242,11 @@ class _ListScreenState extends State<ListScreen> {
                             }
                           },
 
-                          child: item.isPlaying ? Container(
+                          child: item.isPlaying ?( item.isLoading ? Container(
+                              height: 25,
+                              width: 25,
+                              margin: const EdgeInsets.symmetric(horizontal: 10),
+                              child: CircularProgressIndicator()) : Container(
                             height: 25,
                             width: 25,
 
@@ -249,7 +257,7 @@ class _ListScreenState extends State<ListScreen> {
                               durationCurrent: item.durationCurrent,
                               durationMax: item.durationMax,
                             ),
-                          ) : Container(
+                          ) ): Container(
                             height: 35,
                             width: 35,
                             margin: const EdgeInsets.symmetric(horizontal: 10),

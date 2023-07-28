@@ -48,3 +48,10 @@ class LessonUpdateDurationMax extends LessonEvent {
   @override
   List<Object> get props => [lesson];
 }
+
+class LessonDownloadMp3 extends LessonEvent {
+  final Lesson lesson;
+  const LessonDownloadMp3({required this.lesson});
+  @override
+  List<Object> get props => [lesson];
+}

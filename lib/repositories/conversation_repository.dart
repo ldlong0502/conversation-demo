@@ -4,7 +4,7 @@ import 'package:untitled/models/conversation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart' as p;
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:untitled/repositories/data_helper.dart';
+import 'package:untitled/repositories/database_listening_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 class ConversationRepository {
   ConversationRepository._privateConstructor();
@@ -13,7 +13,7 @@ class ConversationRepository {
 
   static ConversationRepository get instance => _instance;
 
-  final DataHelper dataHelper = DataHelper.instance;
+  final DatabaseListeningHelper dataHelper = DatabaseListeningHelper.instance;
 
   Future<List<Conversation>> getAllLessons(int lesson) async{
 
