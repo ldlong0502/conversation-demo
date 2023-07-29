@@ -8,99 +8,101 @@ import '../../utils/split_text.dart';
 import 'package:path_drawing/path_drawing.dart';
 
 import '../widgets/draw_room_widget.dart';
+
 class PracticeWriteScreen extends StatelessWidget {
   const PracticeWriteScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<KanjiBloc, KanjiState>(
-        builder: (context, state) {
-          if(state is KanjiLoaded){
-            final size = MediaQuery.of(context).size;
-            return Scaffold(
-              backgroundColor: primaryColor,
-              appBar: PreferredSize(
-                preferredSize: const Size.fromHeight(kToolbarHeight),
-                child: headerTitle(context, state.kanjiCurrent, state),
-              ),
-              body: Stack(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.all(20).copyWith(bottom: 50),
-                    height: size.height * 0.8,
-                    width: double.infinity,
-                    decoration:  BoxDecoration(
-                        color: kanjiColor1.withOpacity(0.4),
-                        borderRadius: BorderRadius.circular(20)),
-                    child:  Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const SizedBox(height: 100,),
-                        Expanded(
-                          flex: 3,
-                            child: Stack(
-                              children: [
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      width: 200,
-                                      height: 200,
-                                      padding:const EdgeInsets.only(bottom: 5),
-                                      child: Stack(
-                                        children: [
-                                          Opacity(
-                                            opacity: !state.isHideActionPracticeWriting ? 1 : 0,
-                                            child: CustomPaint(
-                                              painter: CustomPathPainter(stringPath: state.kanjiCurrent.path),
-                                            ),
-                                          ),
-                                          Align(
-                                              child: Container(
-                                            height: 0.5,
-                                            color: Colors.black54,
-                                            width: 140,
-                                          )),
-                                          Align(
-                                              child: Container(
-                                                height: 140,
-                                                color: Colors.black54,
-                                                width: 0.5,
-                                              ))
-                                        ],
-                                      ),
-                                    ),
-
-                                  ],
-                                ),
-
-                              ],
-                            )),
-                          Expanded(child: Text( state.kanjiCurrent.vi,
-                          style: kTitle.copyWith(
-                            fontSize: 25
-                          ),
-                          ))
-                      ],
+    return BlocBuilder<KanjiBloc, KanjiState>(builder: (context, state) {
+      if (state is KanjiLoaded) {
+        final size = MediaQuery.of(context).size;
+        return Scaffold(
+          backgroundColor: primaryColor,
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(kToolbarHeight),
+            child: headerTitle(context, state.kanjiCurrent, state),
+          ),
+          body: Stack(
+            children: [
+              Container(
+                margin: const EdgeInsets.all(20).copyWith(bottom: 50),
+                height: size.height * 0.8,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                    color: kanjiColor1.withOpacity(0.4),
+                    borderRadius: BorderRadius.circular(20)),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(
+                      height: 100,
                     ),
-                  ),
-                  DrawingRoomWidget(state: state)
-                ],
+                    Expanded(
+                        flex: 3,
+                        child: Stack(
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  width: 200,
+                                  height: 200,
+                                  padding: const EdgeInsets.only(bottom: 5),
+                                  child: Stack(
+                                    children: [
+                                      Opacity(
+                                        opacity:
+                                            !state.isHideActionPracticeWriting
+                                                ? 1
+                                                : 0,
+                                        child: CustomPaint(
+                                          painter: CustomPathPainter(
+                                              stringPath:
+                                                  state.kanjiCurrent.path),
+                                        ),
+                                      ),
+                                      Align(
+                                          child: Container(
+                                        height: 0.5,
+                                        color: Colors.black54,
+                                        width: 140,
+                                      )),
+                                      Align(
+                                          child: Container(
+                                        height: 140,
+                                        color: Colors.black54,
+                                        width: 0.5,
+                                      ))
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        )),
+                    Expanded(
+                        child: Text(
+                      state.kanjiCurrent.vi,
+                      style: kTitle.copyWith(fontSize: 25),
+                    ))
+                  ],
+                ),
               ),
-            );
-
-          }
-          else {
-            return const Scaffold(
-              body: Center(child: CircularProgressIndicator()),);
-          }
-        }
-    );
+              DrawingRoomWidget(state: state)
+            ],
+          ),
+        );
+      } else {
+        return const Scaffold(
+          body: Center(child: CircularProgressIndicator()),
+        );
+      }
+    });
   }
+
   headerTitle(BuildContext context, Kanji kanji, KanjiLoaded state) {
-
-
     return Container(
         alignment: Alignment.bottomCenter,
         decoration: BoxDecoration(
@@ -137,15 +139,13 @@ class PracticeWriteScreen extends StatelessWidget {
                     flex: 3,
                     child: Center(
                         child: Text(
-                          'Luyện viết',
-                          style: TextStyle(
-                              color: secondaryColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18),
-                        ))),
-                Expanded(
-                  child: Container()
-                )
+                      'Luyện viết',
+                      style: TextStyle(
+                          color: secondaryColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18),
+                    ))),
+                Expanded(child: Container())
               ],
             ),
           ),
@@ -155,7 +155,9 @@ class PracticeWriteScreen extends StatelessWidget {
 
 class CustomPathPainter extends CustomPainter {
   final String stringPath;
-  const CustomPathPainter({Key? key , required this.stringPath});
+
+  const CustomPathPainter({Key? key, required this.stringPath});
+
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
@@ -166,8 +168,8 @@ class CustomPathPainter extends CustomPainter {
 
     // Define the path data
     final listStringPath = SplitText().extractPathDataList(stringPath);
-    int count= 1;
-    canvas.scale(2,1.8);
+    int count = 1;
+    canvas.scale(2, 1.8);
     for (var i in listStringPath) {
       var path = parseSvgPathData(i);
       final center = path.getBounds().topLeft;
@@ -175,7 +177,7 @@ class CustomPathPainter extends CustomPainter {
       path = path.shift(Offset(0, 0));
 
       canvas.drawPath(path, paint);
-      TextSpan span =  TextSpan(
+      TextSpan span = TextSpan(
         style: const TextStyle(fontSize: 8, color: Colors.black),
         text: (count++).toString(),
       );

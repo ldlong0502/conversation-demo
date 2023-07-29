@@ -3,12 +3,12 @@ import 'package:untitled/blocs/bloc_kanji/kanji_bloc.dart';
 import 'package:untitled/views/screens/flashcard_screen.dart';
 import 'package:untitled/views/screens/grammar_sreen.dart';
 import 'package:untitled/views/screens/kanji_detail_screen.dart';
+import 'package:untitled/views/screens/mutiple_choice_screen.dart';
 import 'package:untitled/views/screens/practice_write_screen.dart';
 import 'package:untitled/views/widgets/lesson_grid_item_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../constants/constants.dart';
 import 'list_screen.dart';
-
 class KanjiScreen extends StatefulWidget {
   const KanjiScreen({Key? key}) : super(key: key);
 
@@ -330,7 +330,8 @@ class _KanjiScreenState extends State<KanjiScreen> {
         'title': 'Trắc Nghiệm',
         'iconUrl': 'assets/images/ic_choice.png',
         'onPress': () {
-
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const MultipleChoiceScreen()));
         }
       },
       {
@@ -370,7 +371,7 @@ class _KanjiScreenState extends State<KanjiScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Image.asset(listItems[index]['iconUrl'] as String , height: 40,  fit: BoxFit.cover, ),
+                Image.asset(listItems[index]['iconUrl'] as String , height: 35,  fit: BoxFit.cover, ),
                 Text(listItems[index]['title'] as String, style: kTitle.copyWith(color: primaryColor , fontSize: 13)),
               ],
             ),

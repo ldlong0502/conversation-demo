@@ -1,6 +1,7 @@
 
 import 'dart:io';
 
+import 'package:untitled/models/choice.dart';
 import 'package:untitled/models/kanji.dart';
 import 'package:untitled/models/lesson.dart';
 import 'package:sqflite/sqflite.dart';
@@ -46,6 +47,10 @@ class KanjiRepository {
     return LookAndLearn(id: '', en: '', vi: '');
   }
 
+  Future<List<Choice>> getChoices() async{
+    final List<Map<String, dynamic>> result = await dataHelper.queryAllRows('SELECT * FROM jlpt ORDER BY RANDOM() LIMIT 42');
+    return result.map((row) => Choice.fromJson(row)).toList();
+  }
   Future insertKanjiHighLight(value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> savedList = prefs.getStringList('list_highlight_kanji') ?? [];

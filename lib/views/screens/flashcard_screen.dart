@@ -316,10 +316,10 @@ class _FlashcardScreenState extends State<FlashcardScreen>  with TickerProviderS
     final max = listMaps.length;
     return Positioned(
         bottom: 60,
-        left: (widthDevice - 150) / 2,
+        left: (widthDevice - 180) / 2,
         child: Container(
-          height: 30,
-          width: 150,
+          height: 35,
+          width: 180,
           decoration: BoxDecoration(
             color: secondaryColor,
             borderRadius: BorderRadius.circular(20),
@@ -333,62 +333,58 @@ class _FlashcardScreenState extends State<FlashcardScreen>  with TickerProviderS
             ],
           ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Expanded(
-                  child: GestureDetector(
-                      onTap: () {
-                        final previousIndex =
-                        index - 1 < 0 ? max - 1 : index - 1;
-                        _pageController.animateToPage(previousIndex, duration: Duration(milliseconds: 1000), curve: Curves.easeOut);
+              GestureDetector(
+                  onTap: () {
+                    final previousIndex =
+                    index - 1 < 0 ? max - 1 : index - 1;
+                    _pageController.animateToPage(previousIndex, duration: Duration(milliseconds: 1000), curve: Curves.easeOut);
 
-                      },
-                      child: const Icon(
-                        Icons.arrow_left_sharp,
-                        color: primaryColor,
-                      ))),
-              Expanded(
-                  flex: 2,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 1,
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 5, vertical: 9),
-                        color: primaryColor,
-                      ),
-                      Material(
-                        color: Colors.transparent,
-                        child: Text(
-                          '${index+1}/$max',
-                          textAlign: TextAlign.center,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: kTitle.copyWith(
-                              color: primaryColor, fontSize: 10),
-                        ),
-                      ),
-                      Container(
-                        width: 1,
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 5, vertical: 9),
-                        color: primaryColor,
-                      ),
-                    ],
+                  },
+                  child: const Icon(
+                    Icons.arrow_left_sharp,
+                    color: primaryColor,
                   )),
-              Expanded(
-                  child: GestureDetector(
-                      onTap: () {
-                        final nextIndex = index + 1 >= max ? 0 : index + 1;
-                        _pageController.animateToPage(nextIndex, duration: Duration(milliseconds: 1000), curve: Curves.easeOut);
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 1,
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 9),
+                    color: primaryColor,
+                  ),
+                  Material(
+                    color: Colors.transparent,
+                    child: Text(
+                      '${index+1}/$max',
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: kTitle.copyWith(
+                          color: primaryColor, fontSize: 10),
+                    ),
+                  ),
+                  Container(
+                    width: 1,
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 9),
+                    color: primaryColor,
+                  ),
+                ],
+              ),
+              GestureDetector(
+                  onTap: () {
+                    final nextIndex = index + 1 >= max ? 0 : index + 1;
+                    _pageController.animateToPage(nextIndex, duration: Duration(milliseconds: 1000), curve: Curves.easeOut);
 
-                      },
-                      child: const Icon(
-                        Icons.arrow_right_sharp,
-                        color: primaryColor,
-                      ))),
+                  },
+                  child: const Icon(
+                    Icons.arrow_right_sharp,
+                    color: primaryColor,
+                  )),
             ],
           ),
         ));

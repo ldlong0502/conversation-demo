@@ -14,17 +14,14 @@ part 'lesson_state.dart';
 
 class LessonBloc extends Bloc<LessonEvent, LessonState> {
   final lessonRepo = LessonRepository.instance;
+
+  String numIdNow = '1';
+  bool isPlaying = false;
   AudioPlayer audioPlayer = AudioPlayer();
-  CancelableOperation?  _sub;
   LessonBloc() : super(LessonInitial()) {
     on<GetAllLessons>((event, emit) async {
       try {
         var list = await lessonRepo.getAllLessons();
-
-        // list = await Future.wait(list.map((e) async {
-        //   final duration = await AudioHelper.instance.getDuration(e.mp3);
-        //   return e.copyWith(durationMax: duration);
-        // }));
         emit(LessonLoaded(
             listLessons: list,
             isPlaying: false,
@@ -34,28 +31,13 @@ class LessonBloc extends Bloc<LessonEvent, LessonState> {
         print(e);
       }
     });
-    Future<Duration> _loadData(Lesson lesson) async {
-      return await AudioHelper.instance.getDuration(lesson.mp3);
-    }
     on<LessonDownloadMp3>((event, emit) async {
       try {
         if (state is LessonLoaded) {
-          if(_sub != null) {
-            final result = await _sub?.cancel();
-            if(result != null)
-            {
-              await File(await AudioHelper.instance.getPathFileAudio(result)).delete(recursive: true);
-            }
-
-          }
+          numIdNow = event.lesson.id.toString();
           var stateNow = state as LessonLoaded;
           print( 'long'+ stateNow.lessonPlaying.id.toString());
-          _sub = CancelableOperation.fromFuture(
-            _loadData(event.lesson),
-            onCancel: () => event.lesson.mp3,
-          );
-          final duration = await _sub?.value;
-          _sub = null;
+          final duration =  await AudioHelper.instance.getDuration(event.lesson.mp3);
           final list = (state
           as LessonLoaded).listLessons.map((e)  {
             if (e.id == event.lesson.id) {
@@ -67,6 +49,9 @@ class LessonBloc extends Bloc<LessonEvent, LessonState> {
           }).toList();
           final item =
           list.firstWhere((element) => element.id == event.lesson.id);
+
+          if(numIdNow != event.lesson.id.toString()) return;
+          if(!isPlaying) return;
           emit(LessonLoaded(
               listLessons: list,
               isPlaying: true,
@@ -86,6 +71,7 @@ class LessonBloc extends Bloc<LessonEvent, LessonState> {
       try {
         if (state is LessonLoaded) {
           print(111);
+          isPlaying = true;
           var list = (state as LessonLoaded).listLessons.map((e)  {
             if (e.id == event.lesson.id) {
               // final duration = await AudioHelper.instance.getDuration(e.mp3);
@@ -119,6 +105,7 @@ class LessonBloc extends Bloc<LessonEvent, LessonState> {
       try {
         if (state is LessonLoaded) {
           print('stop');
+          isPlaying = false;
           await audioPlayer.stop();
           var stateNow = state as LessonLoaded;
           var list = (state as LessonLoaded).listLessons.map((e) {

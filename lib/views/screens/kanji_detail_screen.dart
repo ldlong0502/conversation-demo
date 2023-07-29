@@ -700,10 +700,10 @@ class _KanjiDetailScreenState extends State<KanjiDetailScreen>
     final max = state.listKanjis.length;
     return Positioned(
         bottom: 60,
-        left: (widthDevice - 150) / 2,
+        left: (widthDevice - 180) / 2,
         child: Container(
-          height: 30,
-          width: 150,
+          height: 35,
+          width: 180,
           decoration: BoxDecoration(
             color: secondaryColor,
             borderRadius: BorderRadius.circular(20),
@@ -717,64 +717,66 @@ class _KanjiDetailScreenState extends State<KanjiDetailScreen>
             ],
           ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Expanded(
-                  child: GestureDetector(
-                      onTap: () {
-                        final previousIndex =
-                            index - 1 < 0 ? max - 1 : index - 1;
-                        _animationController.forward(from: 0);
-                        context.read<KanjiBloc>().add(UpdateKanjiCurrent(
-                            kanji: state.listKanjis[previousIndex]));
-                      },
-                      child: const Icon(
-                        Icons.arrow_left_sharp,
-                        color: primaryColor,
-                      ))),
-              Expanded(
-                  flex: 2,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 1,
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 5, vertical: 9),
-                        color: primaryColor,
-                      ),
-                      Material(
-                        color: Colors.transparent,
-                        child: Text(
-                          '${index+1}/$max',
-                          textAlign: TextAlign.center,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: kTitle.copyWith(
-                              color: primaryColor, fontSize: 10),
-                        ),
-                      ),
-                      Container(
-                        width: 1,
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 5, vertical: 9),
-                        color: primaryColor,
-                      ),
-                    ],
+              GestureDetector(
+                  onTap: () {
+                    final previousIndex =
+                        index - 1 < 0 ? max - 1 : index - 1;
+                    _animationController.forward(from: 0);
+                    context.read<KanjiBloc>().add(UpdateKanjiCurrent(
+                        kanji: state.listKanjis[previousIndex]));
+                  },
+                  child: Container(
+                    width: 50,
+                    child: const Icon(
+                      Icons.arrow_left_sharp,
+                      color: primaryColor,
+                    ),
                   )),
-              Expanded(
-                  child: GestureDetector(
-                      onTap: () {
-                        final nextIndex = index + 1 >= max ? 0 : index + 1;
-                        _animationController.forward(from: 0);
-                        context.read<KanjiBloc>().add(UpdateKanjiCurrent(
-                            kanji: state.listKanjis[nextIndex]));
-                      },
-                      child: const Icon(
-                        Icons.arrow_right_sharp,
-                        color: primaryColor,
-                      ))),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 1,
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 9),
+                    color: primaryColor,
+                  ),
+                  Material(
+                    color: Colors.transparent,
+                    child: Text(
+                      '${index+1}/$max',
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: kTitle.copyWith(
+                          color: primaryColor, fontSize: 10),
+                    ),
+                  ),
+                  Container(
+                    width: 1,
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 9),
+                    color: primaryColor,
+                  ),
+                ],
+              ),
+              GestureDetector(
+                  onTap: () {
+                    final nextIndex = index + 1 >= max ? 0 : index + 1;
+                    _animationController.forward(from: 0);
+                    context.read<KanjiBloc>().add(UpdateKanjiCurrent(
+                        kanji: state.listKanjis[nextIndex]));
+                  },
+                  child: Container(
+                    width: 50,
+                    child: const Icon(
+                      Icons.arrow_right_sharp,
+                      color: primaryColor,
+                    ),
+                  )),
             ],
           ),
         ));

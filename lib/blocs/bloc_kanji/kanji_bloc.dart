@@ -18,6 +18,8 @@ part 'kanji_state.dart';
 class KanjiBloc extends Bloc<KanjiEvent, KanjiState> {
   final kanjiRepo = KanjiRepository.instance;
 
+  String numIdNow = '1';
+
   KanjiBloc() : super(KanjiInitial()) {
     on<GetAllKanjis>((event, emit) async {
       var list = await kanjiRepo.getAllKanjis();
@@ -40,6 +42,7 @@ class KanjiBloc extends Bloc<KanjiEvent, KanjiState> {
     on<UpdateKanjiCurrent>((event, emit) async {
       if (state is KanjiLoaded) {
         var stateNow = (state as KanjiLoaded);
+        numIdNow = event.kanji.id;
         emit(KanjiLoaded(
             listKanjis: stateNow.listKanjis,
             isHideActionPracticeWriting: stateNow.isHideActionPracticeWriting,
@@ -49,6 +52,7 @@ class KanjiBloc extends Bloc<KanjiEvent, KanjiState> {
     });
     on<UpdateListVocabularies>((event, emit) async {
       if (state is KanjiLoaded) {
+
         var stateNow = (state as KanjiLoaded);
         final listIntVoc =
             SplitText().extractVocabularies(event.kanji.vocabularies);
@@ -57,6 +61,10 @@ class KanjiBloc extends Bloc<KanjiEvent, KanjiState> {
         final look_and_learn = await kanjiRepo.getLookAndLearnById(stateNow.kanjiCurrent.order1);
 
         final pathImage = await ApiHelper.instance.getPathFileImageUsageKanji(stateNow.kanjiCurrent.order1, event.context);
+        if(event.kanji.id != numIdNow){
+          return;
+        }
+
 
         var list = stateNow.listKanjis.map((e) {
           if(e.id ==stateNow.kanjiCurrent.id) {
@@ -67,11 +75,14 @@ class KanjiBloc extends Bloc<KanjiEvent, KanjiState> {
         }).toList();
 
         final itemNow = list.firstWhere((element) => element.id == stateNow.kanjiCurrent.id);
+
+
         emit(KanjiLoaded(
             listKanjis: list,
             isHideActionPracticeWriting: stateNow.isHideActionPracticeWriting,
             listVocs: listVocs,
             kanjiCurrent: itemNow));
+        // numLoading--;
       }
     });
 
@@ -98,8 +109,10 @@ class KanjiBloc extends Bloc<KanjiEvent, KanjiState> {
     });
 
     on<ChangeFirstItem>((event, emit) async {
+
       if (state is KanjiLoaded) {
         var stateNow = (state as KanjiLoaded);
+        numIdNow =  stateNow.listKanjis[0].id;
         emit(KanjiLoaded(
             listKanjis: stateNow.listKanjis,
             isHideActionPracticeWriting: false,
