@@ -26,6 +26,12 @@ class KanjiRepository {
     final listKanjis = result.map((row) => Kanji.fromJson(row)).toList();
     return listKanjis;
   }
+  Future<List<Kanji>> getKanjisNotBaseOnLesson(int limit) async{
+    if(limit == 0) return <Kanji>[];
+    final List<Map<String, dynamic>> result = await dataHelper.queryAllRows('SELECT * FROM kanji where lesson_id != 1 ORDER BY RANDOM() limit $limit');
+    final listKanjis = result.map((row) => Kanji.fromJson(row)).toList();
+    return listKanjis;
+  }
 
   Future<List<Vocabulary>> getVocabularies(List<int> listId) async{
     var listVocs = <Vocabulary>[];

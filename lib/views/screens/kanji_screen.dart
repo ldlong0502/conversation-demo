@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/blocs/bloc_kanji/kanji_bloc.dart';
+import 'package:untitled/views/screens/challenge_one_screen.dart';
 import 'package:untitled/views/screens/flashcard_screen.dart';
 import 'package:untitled/views/screens/grammar_sreen.dart';
 import 'package:untitled/views/screens/kanji_detail_screen.dart';
@@ -338,7 +339,8 @@ class _KanjiScreenState extends State<KanjiScreen> {
         'title': 'Thử thách 1',
         'iconUrl': 'assets/images/ic_challenge.png',
         'onPress': () {
-
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) =>  ChallengeOneScreen(listKanjis: state.listKanjis)));
         }
       },
       {
