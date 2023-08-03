@@ -1,14 +1,16 @@
 
 import 'package:flutter/material.dart';
-import 'package:untitled/blocs/bloc_conversation/conversation_bloc.dart';
-import 'package:untitled/blocs/bloc_grammar/grammar_bloc.dart';
-import 'package:untitled/blocs/bloc_kanji/kanji_bloc.dart';
-import 'package:untitled/blocs/bloc_lesson/lesson_bloc.dart';
+import 'package:untitled/blocs/grammar_cubit/grammar_cubit.dart';
+import 'package:untitled/blocs/list_kanji_cubit/list_kanji_cubit.dart';
+import 'package:untitled/blocs/listening_effect_cubit/listening_effect_cubit.dart';
+import 'package:untitled/blocs/practice_listening_cubit/conversation_list_cubit.dart';
+import 'package:untitled/blocs/practice_listening_cubit/conversation_player_cubit.dart';
+import 'package:untitled/blocs/practice_listening_cubit/current_lesson_cubit.dart';
+import 'package:untitled/blocs/practice_listening_cubit/listening_list_cubit.dart';
 import 'package:untitled/repositories/database_grammar_helper.dart';
 import 'package:untitled/repositories/database_kanji_helper.dart';
 import 'package:untitled/repositories/database_listening_helper.dart';
-import 'package:untitled/views/screens/lesson_home_screen.dart';
-import 'package:untitled/views/screens/list_screen.dart';
+import 'package:untitled/routes/app_routes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() async {
@@ -20,20 +22,25 @@ void main() async {
       providers: [
         BlocProvider(
           lazy: false,
-          create: (context) => LessonBloc()..add(const GetAllLessons()),
-        ),
+          create: (context) => GrammarCubit()..getData()),
         BlocProvider(
-          lazy: false,
-          create: (context) => ConversationBloc(),
-        ),
+            lazy: false,
+            create: (context) => ListKanjiCubit()..getData()),
         BlocProvider(
-          lazy: false,
-          create: (context) => GrammarBloc()..add(const GetAllGrammars()),
-        ),
+            lazy: false,
+            create: (context) => ListeningListCubit()..getData()),
         BlocProvider(
-          lazy: false,
-          create: (context) => KanjiBloc()..add(const GetAllKanjis()),
-        ),
+            lazy: false,
+            create: (context) => CurrentLessonCubit()),
+        BlocProvider(
+            lazy: false,
+            create: (context) => ConversationListCubit()),
+        BlocProvider(
+            lazy: false,
+            create: (context) => ConversationPlayerCubit()),
+        BlocProvider(
+            lazy: false,
+            create: (context) => ListeningEffectCubit()..load()),
       ],
       child: const MyApp()),);
 }
@@ -50,50 +57,9 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const LessonHomeScreen()
+      onGenerateRoute: AppRoutes.generateRoute,
+      initialRoute: AppRoutes.homeLesson,
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-
-  void _gotoListScreen()  async {
-
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const ListScreen()));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _gotoListScreen,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
-}

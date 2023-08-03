@@ -15,7 +15,7 @@ class ConversationRepository {
 
   final DatabaseListeningHelper dataHelper = DatabaseListeningHelper.instance;
 
-  Future<List<Conversation>> getAllLessons(int lesson) async{
+  Future<List<Conversation>> getAllConversations(int lesson) async{
 
 
     final List<Map<String, dynamic>> result = await dataHelper.queryAllRows('SELECT * FROM sentence where lesson = $lesson');

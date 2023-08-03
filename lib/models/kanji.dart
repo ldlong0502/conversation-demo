@@ -1,3 +1,5 @@
+import 'package:untitled/models/vocabulary.dart';
+
 import 'look_and_learn.dart';
 
 class Kanji {
@@ -16,6 +18,7 @@ class Kanji {
   final String path;
   bool isHighLight;
   LookAndLearn? lookAndLearn;
+  List<Vocabulary>? listVocs;
   Kanji({
     required this.id,
     required this.lessonId,
@@ -31,7 +34,8 @@ class Kanji {
     required this.search,
     required this.path,
     this.isHighLight = false,
-    this.lookAndLearn
+    this.lookAndLearn,
+    this.listVocs
   });
 
   Kanji copyWith({
@@ -49,7 +53,9 @@ class Kanji {
      String? search,
      String? path,
     bool? isHighLight,
-    LookAndLearn? lookAndLearn
+    LookAndLearn? lookAndLearn,
+    List<Vocabulary>? listVocs,
+
   }) {
     return Kanji(
         id: id ?? this.id,
@@ -66,7 +72,8 @@ class Kanji {
         search: search ?? this.search,
         path: path ?? this.path,
       isHighLight: isHighLight ?? this.isHighLight,
-      lookAndLearn: lookAndLearn ?? this.lookAndLearn
+      lookAndLearn: lookAndLearn ?? this.lookAndLearn,
+      listVocs: listVocs ?? this.listVocs
       ,);
   }
 
