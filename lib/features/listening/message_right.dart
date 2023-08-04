@@ -33,7 +33,7 @@ class MessageRight extends StatelessWidget {
             decoration: BoxDecoration(
               color: isHighLight ? AppColor.blue : AppColor.white,
               border: Border.all(
-                color: AppColor.blue,
+                color: AppColor.grey,
                 width: 1,
               ),
               borderRadius: BorderRadius.circular(40),
@@ -74,7 +74,7 @@ class MessageRight extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: AppStyle.kSubTitle.copyWith(
                         color: !isHighLight
-                            ? AppColor.blue
+                            ? AppColor.grey
                             : AppColor.white),
                   ),
                 ],
@@ -96,7 +96,7 @@ class MessageRight extends StatelessWidget {
         children: list.map((e) {
           if (!e.contains('|')) {
             return ColumnTextPhonetic(
-              color: !isHighLight ? AppColor.blue : AppColor.white,
+              color: !isHighLight ? AppColor.grey : AppColor.white,
               textFurigana: e,
               textPhonetic: '',
               isBlur: effectCubit.isBlur,
@@ -104,7 +104,7 @@ class MessageRight extends StatelessWidget {
             );
           } else {
             return ColumnTextPhonetic(
-              color: !isHighLight ? AppColor.blue : AppColor.white,
+              color: !isHighLight ? AppColor.grey : AppColor.white,
               textFurigana: SplitText().getFront(e),
               textPhonetic: SplitText().getBehind(e),
               isBlur: effectCubit.isBlur,

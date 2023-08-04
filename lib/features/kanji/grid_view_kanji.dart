@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:untitled/configs/app_color.dart';
 import 'package:untitled/models/kanji.dart';
 import 'package:untitled/routes/app_routes.dart';
+import '../../blocs/list_kanji_cubit/list_kanji_cubit.dart';
 import '../../configs/app_style.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class GridViewKanji extends StatelessWidget {
   const GridViewKanji({Key? key, required this.listKanjis}) : super(key: key);
@@ -29,6 +31,7 @@ class GridViewKanji extends StatelessWidget {
           return GestureDetector(
             onTap: () => Navigator.pushNamed(context, AppRoutes.kanjiDetail, arguments: {
               'kanji': listKanjis[index],
+              'listKanjiCubit': context.read<ListKanjiCubit>()
             },),
             child: Container(
               decoration: BoxDecoration(

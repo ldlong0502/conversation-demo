@@ -7,34 +7,35 @@ import 'package:untitled/models/lesson.dart';
 import 'package:untitled/widgets/loading_progress.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class PracticeListeningPage extends StatefulWidget {
+import '../blocs/practice_listening_cubit/conversation_player_cubit.dart';
+
+class PracticeListeningPage extends StatelessWidget {
   const PracticeListeningPage({Key? key}) : super(key: key);
 
   @override
-  State<PracticeListeningPage> createState() => _PracticeListeningPageState();
-}
-
-class _PracticeListeningPageState extends State<PracticeListeningPage> {
-  @override
-  void deactivate() {
-    context.read<CurrentLessonCubit>().dispose();
-    super.deactivate();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    context.read<CurrentLessonCubit>().load(context.read<ListeningListCubit>().state![0]);
     return Scaffold(
       backgroundColor: Colors.white.withOpacity(0.99),
-      body: BlocBuilder<ListeningListCubit, List<Lesson>?>(
-          builder: (context, state) => state == null
-              ? const LoadingProgress()
-              : Stack(
-                  children: [
-                    LessonListView(listLessons: state),
-                    const AppbarPlayer()
-                  ],
-                )),
+      body: BlocProvider(
+        create: (context) => ListeningListCubit()..getData(),
+        child: BlocBuilder<ListeningListCubit, List<Lesson>?>(
+            builder: (context, listLessons) => listLessons == null
+                ? const LoadingProgress()
+                : BlocProvider(
+                    create: (context) =>
+                        CurrentLessonCubit(context)..load(listLessons![0]),
+                    child: BlocBuilder<CurrentLessonCubit, Lesson?>(
+                      builder: (context, state) {
+                        return Stack(
+                          children: [
+                            LessonListView(listLessons: listLessons!),
+                            const AppbarPlayer()
+                          ],
+                        );
+                      },
+                    ),
+                  )),
+      ),
     );
   }
 }

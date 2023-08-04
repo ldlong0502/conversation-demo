@@ -9,11 +9,11 @@ class CircularBar extends StatelessWidget {
     double progress =
         lesson.durationCurrent.inMilliseconds / lesson.durationMax.inMilliseconds;
     return SizedBox(
-      height: 30,
-      width: 30,
+      height: 25,
+      width: 25,
       child: CircularProgressIndicator(
         value: progress,
-        strokeWidth: 3,
+        strokeWidth: 5,
         valueColor: const AlwaysStoppedAnimation<Color>(AppColor.blue),
         backgroundColor: Colors.grey[300],
       ),

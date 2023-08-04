@@ -22,21 +22,21 @@ class DatabaseKanjiHelper {
   }
 
   Future<void> unzipFileFromAssets(String zipAssetPath) async {
+    final appDocumentDir = await getApplicationDocumentsDirectory();
+    final destinationDir = Directory('${appDocumentDir.path}/unzipped_files');
     // Đọc file zip từ assets
     final ByteData data = await rootBundle.load(zipAssetPath);
     final List<int> bytes = data.buffer.asUint8List();
-
     final archive = ZipDecoder().decodeBytes(bytes);
-
-    // Tìm thư mục local storage của ứng dụng
-    final appDocumentDir = await getApplicationDocumentsDirectory();
-    final destinationDir = Directory('${appDocumentDir.path}/unzipped_files');
     destinationDir.createSync(recursive: true);
 
     for (final file in archive) {
       if (file.isFile && file.name.endsWith('.sqlite')) {
         final data = file.content as List<int>;
         final filePath = '${destinationDir.path}/${file.name}';
+        if (File(filePath).existsSync()) {
+          return;
+        }
         File(filePath)
           ..createSync(recursive: true)
           ..writeAsBytesSync(data);

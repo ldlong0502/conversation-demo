@@ -140,11 +140,14 @@ class _DrawingRoomState extends State<DrawingRoom>
             final nextIndex = index + 1 >=  listKanjis.length ? 0 : index + 1;
             cubit.updateKanji(listKanjis[nextIndex]);
             _animationController.forward(from: 0);
+            onDelete();
           },
           onPrevious: () {
             final previousIndex = index - 1 < 0   ? listKanjis.length - 1 : index - 1;
             cubit.updateKanji(listKanjis[previousIndex]);
             _animationController.forward(from: 0);
+            _animationController.forward(from: 0);
+            onDelete();
           },
         )
       ],

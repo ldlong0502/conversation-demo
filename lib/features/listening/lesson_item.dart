@@ -10,6 +10,8 @@ import '../../configs/app_color.dart';
 import '../../models/lesson.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../widgets/ring_loading.dart';
+
 class LessonItem extends StatelessWidget {
   const LessonItem({Key? key, required this.lesson}) : super(key: key);
   final Lesson lesson;
@@ -21,18 +23,18 @@ class LessonItem extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(25),
         onTap: ()  {
-           context.read<CurrentLessonCubit>().pause();
-          context.read<ConversationListCubit>().getData(lesson);
+          context.read<CurrentLessonCubit>().pause();
           var currentLesson = context.read<CurrentLessonCubit>().state!;
           if(currentLesson.id == lesson.id) {
-            context.read<ConversationPlayerCubit>().load(context , currentLesson);
+            context.read<ConversationPlayerCubit>().load(currentLesson);
           }
           else{
-            context.read<ConversationPlayerCubit>().load(context ,lesson);
+            context.read<ConversationPlayerCubit>().load(lesson);
           }
 
-
-          Navigator.pushNamed(context, AppRoutes.practiceListeningDetail);
+          Navigator.pushNamed(context, AppRoutes.practiceListeningDetail , arguments: {
+            'conversationPlayerCubit' : context.read<ConversationPlayerCubit>()
+          });
           // print('long' + lesson.durationMax.inMilliseconds.toString());
           // context.read<LessonBloc>().add(LessonStopped());
           // _goToConversation(lesson);
@@ -44,6 +46,7 @@ class LessonItem extends StatelessWidget {
                 builder: (context, state) {
                   return GestureDetector(
                       onTap: () async {
+
                         if (state!.id == lesson.id) {
                           if (state!.isPlaying) {
                             BlocProvider.of<CurrentLessonCubit>(context)
@@ -91,11 +94,10 @@ class LessonItem extends StatelessWidget {
   _buildPlayer(Lesson lessonNow, Lesson item) {
     if (item.id == lessonNow.id) {
       return lessonNow.isLoading
-          ? Container(
-              height: 25,
-              width: 25,
-              margin: const EdgeInsets.symmetric(horizontal: 10),
-              child: const CircularProgressIndicator())
+          ?  const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        child: RingLoading(),
+      )
           : lessonNow.isPlaying
               ? Container(
                   height: 25,

@@ -10,15 +10,20 @@ import '../../repositories/kanji_repository.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 class ConversationPlayerCubit extends Cubit<Lesson?> {
-  ConversationPlayerCubit() : super(null);
-  final audioPlayer = AudioPlayer();
+  ConversationPlayerCubit(this.context) : super(null);
+  var audioPlayer = AudioPlayer();
   int previousIndex = -1;
   final ItemScrollController scrollController = ItemScrollController();
   final ItemPositionsListener itemListener = ItemPositionsListener.create();
   final repo = LessonRepository.instance;
-  BuildContext? context;
-  void load(BuildContext ctx ,Lesson lesson) async {
-    context = ctx;
+  final BuildContext context;
+  List<Conversation>? listConversations;
+
+  void setListConversations(List<Conversation> list) {
+    listConversations = list;
+  }
+  void load(Lesson lesson) async {
+    audioPlayer = AudioPlayer();
     emit(lesson);
     play();
   }
@@ -67,8 +72,8 @@ class ConversationPlayerCubit extends Cubit<Lesson?> {
     emit(state!.copyWith(durationCurrent: Duration.zero));
     pause();
   }
-  void dispose() {
-    audioPlayer.stop();
+  void dispose() async {
+    audioPlayer.dispose();
   }
   bool checkHighLight(Conversation item) {
     var time = state!.durationCurrent.inMilliseconds.toDouble();
@@ -79,7 +84,8 @@ class ConversationPlayerCubit extends Cubit<Lesson?> {
   }
 
   void scrollToWidget() {
-    final listCons = context!.read<ConversationListCubit>().state!;
+    // final listCons = context.read<ConversationListCubit>().state!;
+    final listCons = listConversations!;
     final index = listCons.indexWhere((element) => checkHighLight(element));
     if(previousIndex == index || index == -1) return;
     previousIndex = index;
@@ -105,7 +111,8 @@ class ConversationPlayerCubit extends Cubit<Lesson?> {
   }
 
   void clickMessageItem(Conversation cons) async {
-    final listCons = context!.read<ConversationListCubit>().state!;
+    // final listCons = context.read<ConversationListCubit>().state!;
+    final listCons = listConversations!;
     final index = listCons.indexWhere((element) => checkHighLight(element));
     if(!checkItemVisible(index)) {
       scrollController.scrollTo(

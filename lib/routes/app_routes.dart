@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/blocs/kanji_cubit/kanji_cubit.dart';
 import 'package:untitled/blocs/list_kanji_cubit/list_kanji_cubit.dart';
+import 'package:untitled/blocs/practice_listening_cubit/conversation_player_cubit.dart';
 import 'package:untitled/pages/challenge1_page.dart';
 import 'package:untitled/pages/flashcard_page.dart';
 import 'package:untitled/pages/grammar_detail_page.dart';
@@ -13,6 +14,7 @@ import 'package:untitled/pages/practice_listening_page.dart';
 import 'package:untitled/pages/practice_writing_page.dart';
 import '../models/kanji.dart';
 import '../pages/lesson_home_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AppRoutes {
   static const homeLesson = '/homeLesson';
@@ -27,7 +29,6 @@ class AppRoutes {
   static const flashcard = '/flashcard';
   static const multipleChoice = '/multipleChoice';
   static const challenge1 = '/challenge1';
-
 
 
   static Route? generateRoute(RouteSettings settings) {
@@ -46,8 +47,12 @@ class AppRoutes {
         }
       case AppRoutes.practiceListeningDetail:
         {
+          Map map = settings.arguments as Map;
           return MaterialPageRoute(
-              builder: (context) => const PracticeListeningDetailPage(),
+              builder: (context) =>
+                  BlocProvider.value(
+                      value: map['conversationPlayerCubit'] as ConversationPlayerCubit,
+                      child: const PracticeListeningDetailPage()),
               settings: settings);
         }
       case AppRoutes.kanji:
@@ -59,7 +64,11 @@ class AppRoutes {
         {
           Map map = settings.arguments as Map;
           return MaterialPageRoute(
-              builder: (context) => KanjiDetailPage(map['kanji']),
+              builder: (context) =>
+                  BlocProvider.value(
+                    value: map['listKanjiCubit'] as ListKanjiCubit,
+                    child: KanjiDetailPage(map['kanji']),
+                  ),
               settings: settings);
         }
       case AppRoutes.grammar:
@@ -77,28 +86,43 @@ class AppRoutes {
         {
           Map map = settings.arguments as Map;
           return MaterialPageRoute(
-              builder: (context) => PracticeWritingPage( kanji: map['kanji'],),
+              builder: (context) =>
+                  BlocProvider.value(
+                    value: map['listKanjiCubit'] as ListKanjiCubit,
+                    child: PracticeWritingPage(kanji: map['kanji'],),
+                  ),
               settings: settings);
         }
       case AppRoutes.flashcard:
         {
           Map map = settings.arguments as Map;
           return MaterialPageRoute(
-              builder: (context) => FlashCardPage(listKanjis: map['listKanjis']),
+              builder: (context) =>
+                  BlocProvider.value(
+                    value: map['listKanjiCubit'] as ListKanjiCubit,
+                    child: FlashCardPage(listKanjis: map['listKanjis']),
+                  ),
               settings: settings);
         }
       case AppRoutes.multipleChoice:
         {
-
+          Map map = settings.arguments as Map;
           return MaterialPageRoute(
-              builder: (context) => const MultipleChoicePage(),
+              builder: (context) =>
+                  BlocProvider.value(
+                      value: map['listKanjiCubit'] as ListKanjiCubit,
+                      child: const MultipleChoicePage()),
               settings: settings);
         }
       case AppRoutes.challenge1:
         {
           Map map = settings.arguments as Map;
           return MaterialPageRoute(
-              builder: (context) => Challenge1Page(listKanjis: map['listKanjis']),
+              builder: (context) =>
+                  BlocProvider.value(
+                    value: map['listKanjiCubit'] as ListKanjiCubit,
+                    child: Challenge1Page(listKanjis: map['listKanjis']),
+                  ),
               settings: settings);
         }
     }

@@ -22,28 +22,33 @@ class _ConversationListViewState extends State<ConversationListView> {
   @override
   Widget build(BuildContext context) {
     final consCubit = context.watch<ConversationPlayerCubit>();
-    return BlocBuilder<ConversationListCubit, List<Conversation>?>(
-      builder: (context, state) {
-        if(state == null) return const LoadingProgress();
-        return Padding(
-          padding: const EdgeInsets.only(top: 190,),
-          child: ScrollablePositionedList.builder(
-              padding: const EdgeInsets.only(top: 20, bottom: 50 , left: 10, right: 10),
-              itemScrollController: consCubit.scrollController,
-              itemPositionsListener: consCubit.itemListener,
-              physics: const BouncingScrollPhysics(
-                decelerationRate: ScrollDecelerationRate.fast,
-              ),
-              itemCount: state.length,
-              itemBuilder: (context, idx) {
-                if (state[idx].character == 'A') {
-                  return MessageLeft(cons: state[idx],);
-                } else {
-                  return MessageRight(cons: state[idx]);
-                }
-              }),
-        );
-      },
+    return BlocProvider(
+      create: (context) => ConversationListCubit()..getData(consCubit.state!),
+      child: BlocBuilder<ConversationListCubit, List<Conversation>?>(
+        builder: (context, state) {
+          if (state == null) return const LoadingProgress();
+          consCubit.setListConversations(state!);
+          return Padding(
+            padding: const EdgeInsets.only(top: 190,),
+            child: ScrollablePositionedList.builder(
+                padding: const EdgeInsets.only(
+                    top: 20, bottom: 50, left: 10, right: 10),
+                itemScrollController: consCubit.scrollController,
+                itemPositionsListener: consCubit.itemListener,
+                physics: const BouncingScrollPhysics(
+                  decelerationRate: ScrollDecelerationRate.fast,
+                ),
+                itemCount: state.length,
+                itemBuilder: (context, idx) {
+                  if (state[idx].character == 'A') {
+                    return MessageLeft(cons: state[idx],);
+                  } else {
+                    return MessageRight(cons: state[idx]);
+                  }
+                }),
+          );
+        },
+      ),
     );
   }
 }

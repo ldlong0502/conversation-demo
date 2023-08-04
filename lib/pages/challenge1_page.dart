@@ -41,42 +41,44 @@ class Challenge1Page extends StatelessWidget {
               ),
               body: Stack(
                 children: [
-                  Column(
-                    children: [
-                      SizedBox(
-                        height: 50,
-                        width: MediaQuery.of(context).size.width,
-                        child: ProgressHeader(state: state,),
-                      ),
-                      Container(
-                        height: height * 0.7,
-                        width: double.infinity,
-                        margin: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                            color: AppColor.whiteAccent2,
-                            borderRadius: BorderRadius.circular(30)),
-                        child: Column(
-                          children: [
-                            Expanded(
-                                child: Center(
-                              child: Text(
-                                state.listQuestion[state.indexCurrent].vi,
-                                textAlign: TextAlign.center,
-                                style: AppStyle.kTitle.copyWith(
-                                  color: AppColor.green,
-                                  fontSize: 30,
-                                ),
-                              ),
-                            )),
-                            Expanded(flex: 4, child: GridAnswer(state: state,))
-                          ],
+                  SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 50,
+                          width: MediaQuery.of(context).size.width,
+                          child: ProgressHeader(state: state,),
                         ),
-                      ),
-                      Text(
-                        '${state.indexCurrent + 1}/${state.listQuestion.length}',
-                        style: AppStyle.kTitle.copyWith(color: AppColor.green),
-                      )
-                    ],
+                        Container(
+                          height: height * 0.7,
+                          width: double.infinity,
+                          margin: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                              color: AppColor.whiteAccent2,
+                              borderRadius: BorderRadius.circular(30)),
+                          child: Column(
+                            children: [
+                              Expanded(
+                                  child: Center(
+                                child: Text(
+                                  state.listQuestion[state.indexCurrent].vi,
+                                  textAlign: TextAlign.center,
+                                  style: AppStyle.kTitle.copyWith(
+                                    color: AppColor.green,
+                                    fontSize: 30,
+                                  ),
+                                ),
+                              )),
+                              Expanded(flex: 4, child: GridAnswer(state: state,))
+                            ],
+                          ),
+                        ),
+                        Text(
+                          '${state.indexCurrent + 1}/${state.listQuestion.length}',
+                          style: AppStyle.kTitle.copyWith(color: AppColor.green),
+                        )
+                      ],
+                    ),
                   ),
                   if (state.isShowingDialog)
                     GestureDetector(

@@ -18,31 +18,7 @@ void main() async {
   await DatabaseListeningHelper.instance.unzipFileFromAssets('assets/databases/listening_n5.zip');
   await DatabaseGrammarHelper.instance.unzipFileFromAssets('assets/databases/grammar.zip');
   await DatabaseKanjiHelper.instance.unzipFileFromAssets('assets/databases/kanji.zip');
-  runApp( MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          lazy: false,
-          create: (context) => GrammarCubit()..getData()),
-        BlocProvider(
-            lazy: false,
-            create: (context) => ListKanjiCubit()..getData()),
-        BlocProvider(
-            lazy: false,
-            create: (context) => ListeningListCubit()..getData()),
-        BlocProvider(
-            lazy: false,
-            create: (context) => CurrentLessonCubit()),
-        BlocProvider(
-            lazy: false,
-            create: (context) => ConversationListCubit()),
-        BlocProvider(
-            lazy: false,
-            create: (context) => ConversationPlayerCubit()),
-        BlocProvider(
-            lazy: false,
-            create: (context) => ListeningEffectCubit()..load()),
-      ],
-      child: const MyApp()),);
+  runApp( const MyApp());
 }
 
 class MyApp extends StatelessWidget {

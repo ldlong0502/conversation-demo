@@ -15,24 +15,24 @@ class GrammarPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(kToolbarHeight),
-          child: AppBarCustom(
-            title: AppTextTranslate.getTranslatedText(EnumAppText.txtGrammar),
-            bgColor: AppColor.blue,
-            textColor: AppColor.white,
-          ),
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: AppBarCustom(
+          title: AppTextTranslate.getTranslatedText(EnumAppText.txtGrammar),
+          bgColor: AppColor.blue,
+          textColor: AppColor.white,
         ),
-        body: BlocBuilder<GrammarCubit, GrammarState>(
-          builder: (context, state) {
-            if(state is GrammarLoaded){
-              return ListViewGrammar(listGrammar: state.listGrammars);
+      ),
+      body: BlocProvider(
+        create: (context) => GrammarCubit()..getData(),
+        child: BlocBuilder<GrammarCubit, GrammarState>(
+            builder: (context, state) {
+              if (state is GrammarLoaded) {
+                return ListViewGrammar(listGrammar: state.listGrammars);
+              }
+              return const LoadingProgress();
             }
-            return const LoadingProgress();
-
-          }
         ),
       ),
     );

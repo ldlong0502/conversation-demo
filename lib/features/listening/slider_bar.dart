@@ -4,6 +4,9 @@ import 'package:untitled/blocs/practice_listening_cubit/current_lesson_cubit.dar
 
 import '../../configs/app_color.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../widgets/ring_loading.dart';
+
 class SliderBar extends StatelessWidget {
   const SliderBar({Key? key}) : super(key: key);
 
@@ -15,31 +18,41 @@ class SliderBar extends StatelessWidget {
       children: [
         InkWell(
           onTap: () async {
-           if(consCubit.state!.isPlaying) {
-             consCubit.pause();
-           } else{
-             consCubit.play();
-           }
+            if (consCubit.state!.isLoading) return;
+            if (consCubit.state!.isPlaying) {
+              consCubit.pause();
+            } else {
+              consCubit.play();
+            }
           },
-          child: Container(
-            height: 25,
-            width: 25,
-            margin: const EdgeInsets.symmetric(horizontal: 10),
-            decoration:  BoxDecoration(
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    offset: const Offset(0.0, 3.0),
-                    spreadRadius: 2,
-                    blurRadius: 4.0,
-                  ),
-                ],
-                color: AppColor.blue),
-            alignment: Alignment.center,
-            child: Icon(consCubit.state!.isPlaying ? Icons.pause : Icons.play_arrow,
-                color: Colors.white, size: 20),
-          ),
+          child: consCubit.state!.isLoading
+              ? const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: RingLoading(),
+                )
+              : Container(
+                  height: 25,
+                  width: 25,
+                  margin: const EdgeInsets.symmetric(horizontal: 10),
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          offset: const Offset(0.0, 3.0),
+                          spreadRadius: 2,
+                          blurRadius: 4.0,
+                        ),
+                      ],
+                      color: AppColor.blue),
+                  alignment: Alignment.center,
+                  child: Icon(
+                      consCubit.state!.isPlaying
+                          ? Icons.pause
+                          : Icons.play_arrow,
+                      color: Colors.white,
+                      size: 20),
+                ),
         ),
         Flexible(
           child: SliderTheme(
@@ -60,7 +73,9 @@ class SliderBar extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(width: 20,)
+        const SizedBox(
+          width: 20,
+        )
       ],
     );
   }

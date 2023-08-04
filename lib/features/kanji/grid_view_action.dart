@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:untitled/blocs/list_kanji_cubit/list_kanji_cubit.dart';
 import 'package:untitled/configs/app_color.dart';
 import 'package:untitled/configs/app_style.dart';
 import '../../models/kanji.dart';
 import '../../routes/app_routes.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
 class GridViewAction extends StatelessWidget {
   const GridViewAction(
       {Key? key, required this.listKanjis})
@@ -20,7 +21,10 @@ class GridViewAction extends StatelessWidget {
           Navigator.pushNamed(
             context,
             AppRoutes.kanjiDetail,
-            arguments: {'kanji': listKanjis[0],},
+            arguments: {
+              'kanji': listKanjis[0],
+              'listKanjiCubit': context.read<ListKanjiCubit>()
+            },
           );
         }
       },
@@ -31,7 +35,11 @@ class GridViewAction extends StatelessWidget {
           Navigator.pushNamed(
             context,
             AppRoutes.practiceWriting,
-            arguments: {'kanji': listKanjis[0]},
+            arguments: {
+              'kanji': listKanjis[0],
+              'listKanjiCubit': context.read<ListKanjiCubit>()
+            },
+
           );
         }
       },
@@ -42,7 +50,9 @@ class GridViewAction extends StatelessWidget {
           Navigator.pushNamed(
             context,
             AppRoutes.flashcard,
-            arguments: {'listKanjis': listKanjis},
+            arguments: {
+              'listKanjis': listKanjis,
+              'listKanjiCubit': context.read<ListKanjiCubit>()},
           );
         }
       },
@@ -53,7 +63,7 @@ class GridViewAction extends StatelessWidget {
           Navigator.pushNamed(
             context,
             AppRoutes.multipleChoice,
-            // arguments: {'listKanjis': listKanjis},
+            arguments: {'listKanjiCubit': context.read<ListKanjiCubit>()},
           );
         }
       },
@@ -64,7 +74,10 @@ class GridViewAction extends StatelessWidget {
           Navigator.pushNamed(
             context,
             AppRoutes.challenge1,
-            arguments: {'listKanjis': listKanjis},
+            arguments: {
+              'listKanjis': listKanjis,
+              'listKanjiCubit': context.read<ListKanjiCubit>()
+            },
           );
         }
       },
