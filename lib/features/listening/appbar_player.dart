@@ -5,10 +5,33 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../enums/app_text.dart';
 import '../../models/lesson.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:rxdart/rxdart.dart';
 
-class AppbarPlayer extends StatelessWidget {
-  const AppbarPlayer({Key? key}) : super(key: key);
+import '../../models/position_data.dart';
+import '../../repositories/audio_helper.dart';
+class AppbarPlayer extends StatefulWidget {
+  const AppbarPlayer({Key? key, required this.audioPlayer, required this.positionDataSteam}) : super(key: key);
+  final AudioPlayer audioPlayer;
+  final Stream<PositionData> positionDataSteam;
 
+  @override
+  State<AppbarPlayer> createState() => _AppbarPlayerState();
+}
+
+class _AppbarPlayerState extends State<AppbarPlayer> {
+  onInit() async {
+    final lesson = context.read<CurrentLessonCubit>().state!;
+    final pathAudio = await AudioHelper.instance.getPathFileAudio(lesson!.mp3);
+    debugPrint(pathAudio);
+    await widget.audioPlayer.setFilePath(pathAudio,
+        initialPosition: lesson!.durationCurrent);
+  }
+  @override
+  void initState() {
+    onInit();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -69,32 +92,58 @@ class AppbarPlayer extends StatelessWidget {
                           size: 35,
                         )),
                     IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          BlocProvider.of<CurrentLessonCubit>(context)
+                              .playPrevious();
+                        },
                         icon: const Icon(
                           Icons.skip_previous,
                           color: AppColor.blue,
                           size: 40,
                         )),
                     CircleAvatar(
-                        radius: 30,
-                        backgroundColor: AppColor.blue,
-                        child: IconButton(
-                            onPressed: () async {
-                              if (state!.isPlaying) {
-                                BlocProvider.of<CurrentLessonCubit>(context)
-                                    .pause();
-                              } else {
-                                BlocProvider.of<CurrentLessonCubit>(context)
-                                    .play();
-                              }
-                            },
-                            icon: Icon(
-                              state!.isPlaying ? Icons.pause : Icons.play_arrow,
-                              color: AppColor.white,
-                              size: 40,
-                            ))),
+                      radius: 30,
+                      backgroundColor: AppColor.blue,
+                      child: StreamBuilder<PlayerState>(
+                          stream: widget.audioPlayer.playerStateStream,
+                          builder: (context, snapshot) {
+                            final playerState = snapshot.data;
+                            final processingState = playerState?.processingState;
+                            final playing = playerState?.playing;
+                            if (!(playing ?? false)) {
+
+                              return IconButton(
+                                  onPressed: widget.audioPlayer.play,
+                                  iconSize: 40,
+                                  color: AppColor.white,
+                                  icon: const Icon(Icons.play_arrow_rounded));
+                            } else if (processingState != ProcessingState.completed) {
+                              print(processingState);
+                              return IconButton(
+                                  onPressed: widget.audioPlayer.pause,
+                                  iconSize: 40,
+                                  color:  AppColor.white,
+                                  icon: const Icon(Icons.pause_rounded));
+
+                            }
+                            return IconButton(
+                                onPressed: ()  async {
+                                  final pathAudio = await AudioHelper.instance.getPathFileAudio(state!.mp3);
+                                  debugPrint(pathAudio);
+                                  await widget.audioPlayer.setFilePath(pathAudio,
+                                      initialPosition: state!.durationCurrent);
+                                  await widget.audioPlayer.play();
+                                },
+                                iconSize: 40,
+                                color: AppColor.white,
+                                icon: const Icon(Icons.play_arrow_rounded));
+                          }),
+                    ),
                     IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          BlocProvider.of<CurrentLessonCubit>(context)
+                              .playNext();
+                        },
                         icon: const Icon(
                           Icons.skip_next,
                           color: AppColor.blue,

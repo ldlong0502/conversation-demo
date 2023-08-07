@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:untitled/widgets/loading_progress.dart';
 import '../blocs/listening_effect_cubit/listening_effect_cubit.dart';
 import '../features/listening/appbar_detail_player.dart';
-
+import 'package:just_audio/just_audio.dart';
 class PracticeListeningDetailPage extends StatefulWidget {
   const PracticeListeningDetailPage({Key? key}) : super(key: key);
 
@@ -17,12 +17,18 @@ class PracticeListeningDetailPage extends StatefulWidget {
 
 class _PracticeListeningDetailPageState
     extends State<PracticeListeningDetailPage> {
+
+  final audioPlayer = AudioPlayer();
   @override
   void deactivate() {
     BlocProvider.of<ConversationPlayerCubit>(context).dispose();
     super.deactivate();
   }
-
+  @override
+  void dispose() {
+    audioPlayer.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -32,15 +38,14 @@ class _PracticeListeningDetailPageState
           if(state is ListeningEffectLoaded) {
             return Scaffold(
               backgroundColor: Colors.white.withOpacity(0.99),
-              body: const Stack(
-                children: [
-                  ConversationListView(),
-                  AppbarDetailPlayer(),
-                ],
+              appBar:const PreferredSize(
+                preferredSize: Size.fromHeight(180),
+                child: AppbarDetailPlayer(),
               ),
+              body: const ConversationListView(),
             );
           }
-          return const LoadingProgress();
+          return const Scaffold(body: LoadingProgress());
         },
       ),
     );

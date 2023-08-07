@@ -15,7 +15,6 @@ class AppbarDetailPlayer extends StatelessWidget {
     final cubit = context.watch<ConversationPlayerCubit>();
     return SafeArea(
       child: Container(
-          height: 180,
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:untitled/blocs/kanji_cubit/kanji_cubit.dart';
 import 'package:untitled/blocs/list_kanji_cubit/list_kanji_cubit.dart';
 import 'package:untitled/blocs/practice_listening_cubit/conversation_player_cubit.dart';
+import 'package:untitled/blocs/word_cubit/list_word_cubit.dart';
 import 'package:untitled/pages/challenge1_page.dart';
 import 'package:untitled/pages/flashcard_page.dart';
 import 'package:untitled/pages/grammar_detail_page.dart';
@@ -12,6 +13,8 @@ import 'package:untitled/pages/multiple_choice_page.dart';
 import 'package:untitled/pages/practice_listening_detail_page.dart';
 import 'package:untitled/pages/practice_listening_page.dart';
 import 'package:untitled/pages/practice_writing_page.dart';
+import 'package:untitled/pages/word_detail_page.dart';
+import 'package:untitled/pages/word_page.dart';
 import '../models/kanji.dart';
 import '../pages/lesson_home_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,15 +25,15 @@ class AppRoutes {
   static const practiceListeningDetail = '/practiceListeningDetail';
   static const kanji = '/kanji';
   static const kanjiDetail = '/kanjiDetail';
-  static const vocabulary = '/vocabulary';
+  static const vocabulary = '/vocabulary'; // từ vừng trong chữ hán
   static const grammar = '/grammar';
   static const grammarDetail = '/grammarDetail';
   static const practiceWriting = '/practiceWriting';
   static const flashcard = '/flashcard';
   static const multipleChoice = '/multipleChoice';
   static const challenge1 = '/challenge1';
-
-
+  static const word = '/word'; //từ vừng màn hình home
+  static const wordDetail = '/wordDetail';
   static Route? generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case AppRoutes.homeLesson:
@@ -60,6 +63,7 @@ class AppRoutes {
           return MaterialPageRoute(
               builder: (context) => const KanjiPage(), settings: settings);
         }
+
       case AppRoutes.kanjiDetail:
         {
           Map map = settings.arguments as Map;
@@ -68,6 +72,22 @@ class AppRoutes {
                   BlocProvider.value(
                     value: map['listKanjiCubit'] as ListKanjiCubit,
                     child: KanjiDetailPage(map['kanji']),
+                  ),
+              settings: settings);
+        }
+      case AppRoutes.word:
+        {
+          return MaterialPageRoute(
+              builder: (context) => const WordPage(), settings: settings);
+        }
+      case AppRoutes.wordDetail:
+        {
+          Map map = settings.arguments as Map;
+          return MaterialPageRoute(
+              builder: (context) =>
+                  BlocProvider.value(
+                    value: map['listWordCubit'] as ListWordCubit,
+                    child: const WordDetailPage(),
                   ),
               settings: settings);
         }
