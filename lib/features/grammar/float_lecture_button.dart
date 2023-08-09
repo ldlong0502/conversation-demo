@@ -3,9 +3,7 @@ import 'package:untitled/configs/app_color.dart';
 import 'package:untitled/configs/app_style.dart';
 import 'package:untitled/enums/app_text.dart';
 import 'package:untitled/models/grammar.dart';
-
 import '../../widgets/dialogs.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class FloatLectureButton extends StatelessWidget {
   const FloatLectureButton({Key? key, required this.grammar}) : super(key: key);
@@ -18,13 +16,14 @@ class FloatLectureButton extends StatelessWidget {
         right: 0,
         child: GestureDetector(
           onTap: () {
-            if (grammar.youtubeLink == '') {
-              Dialogs().showSorryDialog(context);
-            } else {
-              String? videoId =
-                  YoutubePlayer.convertUrlToId(grammar.youtubeLink);
-              Dialogs().showYoutubePopup(context, videoId!);
-            }
+            // if (grammar.youtubeLink == '') {
+            //   Dialogs().showSorryDialog(context);
+            // } else {
+            //   String? videoId =
+            //       YoutubePlayer.convertUrlToId(grammar.youtubeLink);
+            //   Dialogs().showYoutubePopup(context, videoId!);
+            // }
+            Dialogs().showSorryDialog(context);
           },
           child: Container(
             height: 45,

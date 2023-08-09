@@ -5,7 +5,7 @@ import 'package:untitled/enums/app_text.dart';
 import 'package:untitled/models/kanji.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import '../../../utils/split_text.dart';
-import 'custom_painter.dart';
+
 class BackItem extends StatelessWidget {
   const BackItem({Key? key, required this.item}) : super(key: key);
   final Kanji item;

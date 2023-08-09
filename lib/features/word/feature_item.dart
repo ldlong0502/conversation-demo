@@ -8,15 +8,18 @@ class FeatureItem extends StatelessWidget {
   final Function() onPress;
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Image.asset(asset, height: 60,),
-        Text(title , style: AppStyle.kTitle.copyWith(
-          color: AppColor.white
-        ),)
-      ],
+    return GestureDetector(
+      onTap: onPress,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.asset(asset, height: 60,),
+          Text(title , style: AppStyle.kTitle.copyWith(
+            color: AppColor.white
+          ),)
+        ],
+      ),
     );
   }
 }

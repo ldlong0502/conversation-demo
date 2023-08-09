@@ -16,7 +16,7 @@ class GridViewAction extends StatelessWidget {
     var listItems = [
       {
         'title': 'Chi tiết',
-        'iconUrl': 'assets/images/ic_detail.png',
+        'iconUrl': 'assets/images/ic_detailed.png',
         'onPress': () {
           Navigator.pushNamed(
             context,
@@ -30,7 +30,7 @@ class GridViewAction extends StatelessWidget {
       },
       {
         'title': 'Luyện Viết',
-        'iconUrl': 'assets/images/ic_write.png',
+        'iconUrl': 'assets/images/ic_draw.png',
         'onPress': () {
           Navigator.pushNamed(
             context,
@@ -45,7 +45,7 @@ class GridViewAction extends StatelessWidget {
       },
       {
         'title': 'Flashcard',
-        'iconUrl': 'assets/images/ic_card.png',
+        'iconUrl': 'assets/images/ic_flashcard.png',
         'onPress': () {
           Navigator.pushNamed(
             context,
@@ -58,7 +58,7 @@ class GridViewAction extends StatelessWidget {
       },
       {
         'title': 'Trắc Nghiệm',
-        'iconUrl': 'assets/images/ic_choice.png',
+        'iconUrl': 'assets/images/ic_practise.png',
         'onPress': () {
           Navigator.pushNamed(
             context,
@@ -69,7 +69,7 @@ class GridViewAction extends StatelessWidget {
       },
       {
         'title': 'Thử thách 1',
-        'iconUrl': 'assets/images/ic_challenge.png',
+        'iconUrl': 'assets/images/ic_changellenge_1.png',
         'onPress': () {
           Navigator.pushNamed(
             context,
@@ -83,7 +83,7 @@ class GridViewAction extends StatelessWidget {
       },
       {
         'title': 'Thử thách 2',
-        'iconUrl': 'assets/images/ic_challenge.png',
+        'iconUrl': 'assets/images/ic_changellenge_1.png',
         'onPress': () {}
       },
     ];
@@ -108,12 +108,13 @@ class GridViewAction extends StatelessWidget {
             onPressed: listItems[index]['onPress'] as Function(),
             shape: const CircleBorder(),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Image.asset(
                   listItems[index]['iconUrl'] as String,
                   height: 35,
                   fit: BoxFit.cover,
+                  color: AppColor.white,
                 ),
                 Text(listItems[index]['title'] as String,
                     style: AppStyle.kTitle

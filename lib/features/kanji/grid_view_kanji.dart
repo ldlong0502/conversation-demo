@@ -35,7 +35,7 @@ class GridViewKanji extends StatelessWidget {
             },),
             child: Container(
               decoration: BoxDecoration(
-                color: listKanjis[index]!.isHighLight
+                color: listKanjis[index].isHighLight
                     ? AppColor.blue
                     : AppColor.white,
                 borderRadius: BorderRadius.circular(15),
@@ -53,16 +53,16 @@ class GridViewKanji extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Text(
-                    listKanjis[index]!.kanji,
+                    listKanjis[index].kanji,
                     style: AppStyle.kTitle.copyWith(
                         color: !listKanjis[index].isHighLight
                             ? AppColor.blue
                             : AppColor.white,
                         fontSize: 20),
                   ),
-                  Text(listKanjis[index]!.vi,
+                  Text(listKanjis[index].vi,
                       style: AppStyle.kTitle.copyWith(
-                        color: !listKanjis[index]!.isHighLight
+                        color: !listKanjis[index].isHighLight
                             ? AppColor.blue
                             : AppColor.white,
                       )),

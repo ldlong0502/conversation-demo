@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:drawing_animation/drawing_animation.dart';
 import 'package:path_drawing/path_drawing.dart';
 import 'package:untitled/blocs/kanji_practice_writing_cubit/kanji_practice_writing_cubit.dart';
-
 import '../../../configs/app_color.dart';
-import '../../../models/kanji.dart';
 import '../../../utils/split_text.dart';
 
 class AnimateKanjiDraw extends StatelessWidget {

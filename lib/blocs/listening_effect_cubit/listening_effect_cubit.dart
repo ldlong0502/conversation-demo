@@ -1,12 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:untitled/repositories/conversation_repository.dart';
+import 'package:untitled/repositories/lesson_repository.dart';
 
 part 'listening_effect_state.dart';
 
 class ListeningEffectCubit extends Cubit<ListeningEffectState> {
   ListeningEffectCubit() : super(ListeningEffectInitial());
-  final repo = ConversationRepository.instance;
+  final repo = LessonRepository.instance;
   void load() async {
     final isBlur = await repo.getBlur();
     final isTranslate = await repo.getTranslate();

@@ -23,7 +23,7 @@ class CustomPaintKanji extends CustomPainter {
     canvas.scale(2, 1.8);
     for (var i in listStringPath) {
       var path = parseSvgPathData(i);
-      final center = path.getBounds().topLeft;
+      // final center = path.getBounds().topLeft;
 
       path = path.shift(const Offset(0, 0));
 
@@ -39,7 +39,7 @@ class CustomPaintKanji extends CustomPainter {
         textDirection: TextDirection.ltr,
       );
       tp.layout();
-      final numberOffset = Offset(center.dx, center.dy);
+      // final numberOffset = Offset(center.dx, center.dy);
       // tp.paint(canvas,  numberOffset);
     }
     // Create a Path object from the data

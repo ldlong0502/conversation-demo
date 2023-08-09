@@ -1,13 +1,7 @@
-import 'dart:io';
-
 import 'package:untitled/models/grammar.dart';
-import 'package:untitled/models/lesson.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart' as p;
-import 'package:flutter/services.dart' show rootBundle;
-import 'package:untitled/repositories/database_grammar_helper.dart';
+import 'package:untitled/repositories/download_repository.dart';
+import '../configs/app_config.dart';
 
-import 'database_listening_helper.dart';
 class GrammarRepository {
   GrammarRepository._privateConstructor();
 
@@ -15,11 +9,30 @@ class GrammarRepository {
 
   static GrammarRepository get instance => _instance;
 
-  final DatabaseGrammarHelper dataHelper = DatabaseGrammarHelper.instance;
-  Future<List<Grammar>> getAllGrammars() async{
+  final DownloadRepository repo = DownloadRepository.instance;
 
-    final List<Map<String, dynamic>> result = await dataHelper.queryAllRows('SELECT * FROM grammar');
-    final listGrammars= result.map((row) => Grammar.fromJson(row)).toList();
-    return listGrammars;
+  String url =  AppConfig.getUrlFileZipGrammar(AppConfig.grammarLessonId);
+  String folder = 'grammar';
+  downloadFile() async {
+    await repo.downloadFileAndSave(AppConfig.grammarLessonId, url, folder);
+  }
+  Future<List<Grammar>> getGrammars() async {
+    var listGrammar= <Grammar>[];
+    final List<Map<String, dynamic>> result = await repo
+        .getJsonData(AppConfig.grammarLessonId, folder);
+    for (var item in result) {
+      if (result.isNotEmpty) {
+        listGrammar.add(Grammar.fromJson(item));
+      }
+    }
+    return listGrammar;
+  }
+
+  String getUrlImageById(int id )  {
+    return repo.getUrlImageById(id , AppConfig.grammarLessonId, folder);
+  }
+
+  String getUrlAudioById(int id)  {
+    return repo.getUrlAudioById(id, AppConfig.grammarLessonId, folder);
   }
 }

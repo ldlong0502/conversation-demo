@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/configs/app_style.dart';
-import 'package:untitled/models/conversation.dart';
-
+import 'package:untitled/models/sentences.dart';
 import '../../blocs/listening_effect_cubit/listening_effect_cubit.dart';
-import '../../blocs/practice_listening_cubit/conversation_player_cubit.dart';
+import '../../blocs/practice_listening_cubit/current_lesson_cubit.dart';
 import '../../configs/app_color.dart';
 import '../../utils/split_text.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'column_text_phonetic.dart';
+
+
 class MessageRight extends StatelessWidget {
   const MessageRight({Key? key, required this.cons}) : super(key: key);
-  final Conversation cons;
+  final Sentences cons;
   @override
   Widget build(BuildContext context) {
-    bool isHighLight = context.watch<ConversationPlayerCubit>().checkHighLight(cons);
+    bool isHighLight = cons.isHighLight;
     final effectCubit =
     context.watch<ListeningEffectCubit>().state as ListeningEffectLoaded;
     return Padding(
@@ -48,29 +48,14 @@ class MessageRight extends StatelessWidget {
             ),
             child: InkWell(
               onTap: () async {
-                BlocProvider.of<ConversationPlayerCubit>(context).clickMessageItem(cons);
+                context.read<CurrentLessonCubit>().clickConversationItem(cons);
               },
-              // child: state.isTranslate ? Column(
-              //   children: [
-              //     rowPhoneticText(isHighLight),
-              //     Text(
-              //       widget.cons.vi,
-              //       textAlign: TextAlign.center,
-              //       style: kSentenceVi.copyWith(
-              //           color: !isHighLight ? AppColor.blue : AppColor.white),
-              //     ),
-              //   ],
-              // ) : Column(
-              //   children: [
-              //     rowPhoneticText(isHighLight),
-              //   ],
-              // ),
               child: effectCubit.isTranslate
                   ? Column(
                 children: [
                   rowPhoneticText(isHighLight , effectCubit),
                   Text(
-                    cons.vi,
+                    cons.mean,
                     textAlign: TextAlign.center,
                     style: AppStyle.kSubTitle.copyWith(
                         color: !isHighLight

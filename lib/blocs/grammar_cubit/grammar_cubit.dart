@@ -16,10 +16,10 @@ class GrammarCubit extends Cubit<GrammarState> {
 
   GrammarCubit() : super(GrammarInitial());
   late List<Grammar> listGrammars;
-
   void getData() async {
     emit(GrammarLoading());
-    listGrammars = await repo.getAllGrammars();
+    await repo.downloadFile();
+    listGrammars = await repo.getGrammars();
     emit(GrammarLoaded(listGrammars: listGrammars));
   }
 }

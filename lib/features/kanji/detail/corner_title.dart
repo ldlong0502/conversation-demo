@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/configs/app_color.dart';
 import 'package:untitled/configs/app_style.dart';
-import 'package:untitled/enums/app_text.dart';
 
 class CornerTitle extends StatelessWidget {
   const CornerTitle({Key? key , this.width = 50, required this.title}) : super(key: key);

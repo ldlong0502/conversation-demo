@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/features/lesson_home/action_item.dart';
-import 'package:untitled/repositories/database_word_helper.dart';
-
 import '../../enums/app_text.dart';
 import '../../routes/app_routes.dart';
 class GridViewAction extends StatelessWidget {
@@ -29,7 +27,8 @@ class GridViewAction extends StatelessWidget {
       {
         'title': AppTextTranslate.getTranslatedText(EnumAppText.txtVocabulary),
         'iconUrl': 'assets/images/ic_vocabulary.png',
-        'onPress': () async {
+        'onPress': () async  {
+
           Navigator.pushNamed(
               context, AppRoutes.word);
         }

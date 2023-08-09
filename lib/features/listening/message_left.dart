@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:untitled/blocs/practice_listening_cubit/conversation_player_cubit.dart';
 import 'package:untitled/configs/app_style.dart';
-import 'package:untitled/models/conversation.dart';
-
 import '../../blocs/listening_effect_cubit/listening_effect_cubit.dart';
+import '../../blocs/practice_listening_cubit/current_lesson_cubit.dart';
 import '../../configs/app_color.dart';
+import '../../models/sentences.dart';
 import '../../utils/split_text.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'column_text_phonetic.dart';
 
 class MessageLeft extends StatelessWidget {
   const MessageLeft({Key? key, required this.cons}) : super(key: key);
-  final Conversation cons;
+  final Sentences cons;
 
   @override
   Widget build(BuildContext context) {
-    bool isHighLight =
-        context.watch<ConversationPlayerCubit>().checkHighLight(cons);
+     bool isHighLight = cons.isHighLight;
     final effectCubit =
         context.watch<ListeningEffectCubit>().state as ListeningEffectLoaded;
     return Padding(
@@ -50,15 +48,14 @@ class MessageLeft extends StatelessWidget {
             ),
             child: InkWell(
               onTap: () async {
-                BlocProvider.of<ConversationPlayerCubit>(context)
-                    .clickMessageItem(cons);
+                context.read<CurrentLessonCubit>().clickConversationItem(cons);
               },
               child: effectCubit.isTranslate
                   ? Column(
                       children: [
                         rowPhoneticText(isHighLight , effectCubit),
                         Text(
-                          cons.vi,
+                          cons.mean,
                           textAlign: TextAlign.center,
                           style: AppStyle.kSubTitle.copyWith(
                               color: !isHighLight

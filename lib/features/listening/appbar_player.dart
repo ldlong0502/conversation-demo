@@ -2,17 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:untitled/blocs/practice_listening_cubit/current_lesson_cubit.dart';
 import 'package:untitled/configs/app_color.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:untitled/repositories/lesson_repository.dart';
 import '../../enums/app_text.dart';
 import '../../models/lesson.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:rxdart/rxdart.dart';
-
 import '../../models/position_data.dart';
-import '../../repositories/audio_helper.dart';
+import '../../services/sound_service.dart';
+
 class AppbarPlayer extends StatefulWidget {
-  const AppbarPlayer({Key? key, required this.audioPlayer, required this.positionDataSteam}) : super(key: key);
-  final AudioPlayer audioPlayer;
+  const AppbarPlayer({Key? key, required this.positionDataSteam}) : super(key: key);
   final Stream<PositionData> positionDataSteam;
 
   @override
@@ -20,18 +18,28 @@ class AppbarPlayer extends StatefulWidget {
 }
 
 class _AppbarPlayerState extends State<AppbarPlayer> {
+  final soundService = SoundService.instance;
   onInit() async {
-    final lesson = context.read<CurrentLessonCubit>().state!;
-    final pathAudio = await AudioHelper.instance.getPathFileAudio(lesson!.mp3);
-    debugPrint(pathAudio);
-    await widget.audioPlayer.setFilePath(pathAudio,
-        initialPosition: lesson!.durationCurrent);
+    final cubit = context.read<CurrentLessonCubit>();
+    final pathAudio = LessonRepository.instance.getUrlAudioById(cubit.state!.id);
+    await soundService.player!.setFilePath(pathAudio);
+    soundService.player!.positionStream.listen((position) {
+      if( soundService.player!.duration == null) return;
+      if (position.inMilliseconds >=
+          soundService.player!.duration!.inMilliseconds) {
+        debugPrint('=>>>>>>>>> aaaaaa');
+        if(cubit.isDetailPage) return;
+        cubit.playNext();
+      }
+    });
   }
   @override
   void initState() {
     onInit();
     super.initState();
   }
+
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -105,7 +113,7 @@ class _AppbarPlayerState extends State<AppbarPlayer> {
                       radius: 30,
                       backgroundColor: AppColor.blue,
                       child: StreamBuilder<PlayerState>(
-                          stream: widget.audioPlayer.playerStateStream,
+                          stream: soundService.player!.playerStateStream,
                           builder: (context, snapshot) {
                             final playerState = snapshot.data;
                             final processingState = playerState?.processingState;
@@ -113,14 +121,14 @@ class _AppbarPlayerState extends State<AppbarPlayer> {
                             if (!(playing ?? false)) {
 
                               return IconButton(
-                                  onPressed: widget.audioPlayer.play,
+                                  onPressed: soundService.player!.play,
                                   iconSize: 40,
                                   color: AppColor.white,
                                   icon: const Icon(Icons.play_arrow_rounded));
                             } else if (processingState != ProcessingState.completed) {
                               print(processingState);
                               return IconButton(
-                                  onPressed: widget.audioPlayer.pause,
+                                  onPressed: soundService.player!.pause,
                                   iconSize: 40,
                                   color:  AppColor.white,
                                   icon: const Icon(Icons.pause_rounded));
@@ -128,11 +136,8 @@ class _AppbarPlayerState extends State<AppbarPlayer> {
                             }
                             return IconButton(
                                 onPressed: ()  async {
-                                  final pathAudio = await AudioHelper.instance.getPathFileAudio(state!.mp3);
-                                  debugPrint(pathAudio);
-                                  await widget.audioPlayer.setFilePath(pathAudio,
-                                      initialPosition: state!.durationCurrent);
-                                  await widget.audioPlayer.play();
+                                  final pathAudio = LessonRepository.instance.getUrlAudioById(state!.id);
+                                  await soundService.playSound(pathAudio);
                                 },
                                 iconSize: 40,
                                 color: AppColor.white,

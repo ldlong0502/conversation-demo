@@ -3,11 +3,12 @@ import 'package:untitled/configs/app_color.dart';
 import 'package:untitled/configs/app_style.dart';
 
 class FloatNavigateButton extends StatelessWidget {
-  const FloatNavigateButton({Key? key, required this.index, required this.max, required this.onPrevious, required this.onNext}) : super(key: key);
+  const FloatNavigateButton({Key? key, required this.index, required this.max, required this.onPrevious, required this.onNext , this.color = AppColor.blue}) : super(key: key);
   final int index;
   final int max;
   final Function() onPrevious;
   final Function() onNext;
+  final Color color;
   @override
   Widget build(BuildContext context) {
     final widthDevice = MediaQuery.of(context).size.width;
@@ -18,11 +19,11 @@ class FloatNavigateButton extends StatelessWidget {
           height: 35,
           width: 180,
           decoration: BoxDecoration(
-            color: AppColor.blue,
+            color: color,
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: AppColor.blue.withOpacity(0.5),
+                color: color.withOpacity(0.5),
                 offset: const Offset(0.0, 3.0),
                 spreadRadius: 2,
                 blurRadius: 4.0,

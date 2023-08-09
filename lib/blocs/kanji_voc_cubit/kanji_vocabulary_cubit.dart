@@ -1,5 +1,4 @@
-import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:untitled/repositories/kanji_repository.dart';
 import '../../models/kanji.dart';
 import '../../models/vocabulary.dart';

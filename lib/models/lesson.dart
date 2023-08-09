@@ -1,65 +1,52 @@
+import 'package:untitled/models/sentences.dart';
+
 class Lesson {
+  final String mean;
+  final List<Sentences> sentences;
   final int id;
   final String title;
-  final int level;
-  final String vi;
-  final String mp3;
-  bool isPlaying = false;
+  final int lessonId;
   bool isLoading = false;
-  Duration durationMax = const Duration(seconds: 0);
-  Duration durationCurrent = const Duration(seconds: 0);
 
   Lesson(
-      {required this.id,
+      {required this.mean,
+      required this.sentences,
+      required this.id,
       required this.title,
-      required this.level,
-      required this.vi,
-      required this.mp3,
-      this.isPlaying = false,
-        this.isLoading = false,
-      this.durationMax = const Duration(seconds: 0),
-      this.durationCurrent = const Duration(seconds: 0)});
+      required this.lessonId,
+      isLoading = false});
 
   Lesson copyWith(
-      {int? id,
+      {String? mean,
+      List<Sentences>? sentences,
+      int? id,
       String? title,
-      int? level,
-      String? vi,
-      String? mp3,
-      bool? isPlaying,
-        bool? isLoading,
-      Duration? durationMax,
-      Duration? durationCurrent}) {
+      int? lessonId,
+      bool? isLoading}) {
     return Lesson(
-      id: id ?? this.id,
-      title: title ?? this.title,
-      level: level ?? this.level,
-      vi: vi ?? this.vi,
-      mp3: mp3 ?? this.mp3,
-      isPlaying: isPlaying ?? this.isPlaying,
-      isLoading: isLoading ?? this.isLoading,
-      durationMax: durationMax ?? this.durationMax,
-      durationCurrent: durationCurrent ?? this.durationCurrent,
-    );
+        mean: mean ?? this.mean,
+        sentences: sentences ?? this.sentences,
+        id: id ?? this.id,
+        lessonId: lessonId ?? this.lessonId,
+        title: title ?? this.title,
+        isLoading: isLoading ?? this.isLoading);
   }
-
   factory Lesson.fromJson(Map<String, dynamic> json) {
     return Lesson(
+        mean: json['mean'] ?? '',
+        sentences:  List<Sentences>.from(json["sentences"].map((x) => Sentences.fromJson(x))) ?? [],
         id: json['id'] ?? 0,
         title: json['title'] ?? '',
-        level: json['level'] ?? '',
-        vi: json['vi'] ?? '',
-        mp3: json['mp3'] ?? '',
-    );
+        lessonId: json['lesson_id'] ?? 0);
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
+    data['mean'] = mean;
+    data['sentences'] = sentences.map((v) => v.toJson()).toList();
     data['id'] = id;
     data['title'] = title;
-    data['level'] = level;
-    data['vi'] = vi;
-    data['mp3'] = mp3;
+    data['lesson_id'] = lessonId;
     return data;
   }
 }

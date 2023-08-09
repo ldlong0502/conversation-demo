@@ -32,8 +32,6 @@ class _ProgressHeaderState extends State<ProgressHeader> {
   }
   @override
   Widget build(BuildContext context) {
-    final cubit = context.watch<KanjiChallenge1Cubit>();
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Row(

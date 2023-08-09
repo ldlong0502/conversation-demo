@@ -1,15 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:untitled/blocs/grammar_cubit/grammar_cubit.dart';
 import 'package:untitled/blocs/word_cubit/list_word_cubit.dart';
 import 'package:untitled/configs/app_color.dart';
 import 'package:untitled/configs/app_style.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:untitled/models/word.dart';
 import 'package:untitled/routes/app_routes.dart';
 import 'package:untitled/services/sound_service.dart';
-import '../../models/grammar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../repositories/word_repository.dart';
@@ -21,33 +18,33 @@ class WordItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final listWordCubit = context.read<ListWordCubit>();
     final repo =  WordRepository.instance;
-    return Stack(
-      children: [
-        Container(
-            height: 170,
-            margin: const EdgeInsets.symmetric(vertical: 3),
-            decoration: BoxDecoration(
-                color: AppColor.white,
-                border: Border.all(color: AppColor.orange, width: 1),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    offset: const Offset(0.0, 3.0),
-                    spreadRadius: 4,
-                    blurRadius: 4.0,
-                  )
-                ],
-                borderRadius: BorderRadius.circular(20)),
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                borderRadius: BorderRadius.circular(20),
-                onTap: () async {
-                  listWordCubit.updateWord(word);
-                  Navigator.pushNamed(context, AppRoutes.wordDetail, arguments: {
-                    'listWordCubit': listWordCubit
-                  });
-                },
+    return InkWell(
+      onTap: () async {
+        listWordCubit.updateWord(word);
+        Navigator.pushNamed(context, AppRoutes.wordDetail, arguments: {
+          'listWordCubit': listWordCubit
+        });
+      },
+      borderRadius:  BorderRadius.circular(20),
+      child: Stack(
+        children: [
+          Container(
+              height: 170,
+              margin: const EdgeInsets.symmetric(vertical: 3),
+              decoration: BoxDecoration(
+                  color: AppColor.white,
+                  border: Border.all(color: AppColor.orange, width: 1),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      offset: const Offset(0.0, 3.0),
+                      spreadRadius: 4,
+                      blurRadius: 4.0,
+                    )
+                  ],
+                  borderRadius: BorderRadius.circular(20)),
+              child: Material(
+                color: Colors.transparent,
                 child: Row(
                   children: [
                     Expanded(
@@ -97,32 +94,33 @@ class WordItem extends StatelessWidget {
                           Text(word.mean , style: AppStyle.kTitle.copyWith(
                               fontSize: 18
                           ),),
+
                         ],
                       ),
                     ),
                     const SizedBox(width: 45,)
                   ],
                 ),
-              ),
-            )),
-        Positioned(
-            bottom: 3,
-            right: 0,
-            width: 45,
-            height: 35,
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Colors.orange,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  bottomRight: Radius.circular(20)
-                )
-              ),
-              child: const Center(
-                child: Icon(Icons.arrow_forward , color: AppColor.white,),
-              ),
-            ))
-      ],
+              )),
+          Positioned(
+              bottom: 3,
+              right: 0,
+              width: 45,
+              height: 35,
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Colors.orange,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    bottomRight: Radius.circular(20)
+                  )
+                ),
+                child: const Center(
+                  child: Icon(Icons.arrow_forward , color: AppColor.white,),
+                ),
+              ))
+        ],
+      ),
     );
   }
 }

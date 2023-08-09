@@ -1,12 +1,6 @@
 
-import 'dart:io';
-
 import 'package:untitled/models/choice.dart';
 import 'package:untitled/models/kanji.dart';
-import 'package:untitled/models/lesson.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart' as p;
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:untitled/models/look_and_learn.dart';
 import 'package:untitled/models/vocabulary.dart';
 import 'package:untitled/repositories/database_kanji_helper.dart';

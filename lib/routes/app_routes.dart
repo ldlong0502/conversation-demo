@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:untitled/blocs/kanji_cubit/kanji_cubit.dart';
 import 'package:untitled/blocs/list_kanji_cubit/list_kanji_cubit.dart';
-import 'package:untitled/blocs/practice_listening_cubit/conversation_player_cubit.dart';
+import 'package:untitled/blocs/practice_listening_cubit/current_lesson_cubit.dart';
 import 'package:untitled/blocs/word_cubit/list_word_cubit.dart';
-import 'package:untitled/pages/challenge1_page.dart';
-import 'package:untitled/pages/flashcard_page.dart';
-import 'package:untitled/pages/grammar_detail_page.dart';
-import 'package:untitled/pages/grammar_page.dart';
-import 'package:untitled/pages/kanji_detail_page.dart';
-import 'package:untitled/pages/kanji_page.dart';
-import 'package:untitled/pages/multiple_choice_page.dart';
-import 'package:untitled/pages/practice_listening_detail_page.dart';
-import 'package:untitled/pages/practice_listening_page.dart';
-import 'package:untitled/pages/practice_writing_page.dart';
-import 'package:untitled/pages/word_detail_page.dart';
-import 'package:untitled/pages/word_page.dart';
-import '../models/kanji.dart';
-import '../pages/lesson_home_page.dart';
+import 'package:untitled/screens/kanji_screens/challenge1_page.dart';
+import 'package:untitled/screens/kanji_screens/flashcard_page.dart';
+import 'package:untitled/screens/grammar_screens/grammar_detail_page.dart';
+import 'package:untitled/screens/grammar_screens/grammar_page.dart';
+import 'package:untitled/screens/kanji_screens/kanji_detail_page.dart';
+import 'package:untitled/screens/kanji_screens/kanji_page.dart';
+import 'package:untitled/screens/kanji_screens/multiple_choice_page.dart';
+import 'package:untitled/screens/listening_screens/practice_listening_detail_page.dart';
+import 'package:untitled/screens/listening_screens/practice_listening_page.dart';
+import 'package:untitled/screens/kanji_screens/practice_writing_page.dart';
+import 'package:untitled/screens/word_screens/word_detail_page.dart';
+import 'package:untitled/screens/word_screens/word_flashcard_page.dart';
+import 'package:untitled/screens/word_screens/word_page.dart';
+import '../screens/lesson_home_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../screens/word_screens/word_practice_page.dart';
 
 class AppRoutes {
   static const homeLesson = '/homeLesson';
@@ -34,6 +35,8 @@ class AppRoutes {
   static const challenge1 = '/challenge1';
   static const word = '/word'; //từ vừng màn hình home
   static const wordDetail = '/wordDetail';
+  static const wordFlashcard = '/wordFlashcard';
+  static const wordPractice = '/wordPractice';
   static Route? generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case AppRoutes.homeLesson:
@@ -54,8 +57,9 @@ class AppRoutes {
           return MaterialPageRoute(
               builder: (context) =>
                   BlocProvider.value(
-                      value: map['conversationPlayerCubit'] as ConversationPlayerCubit,
-                      child: const PracticeListeningDetailPage()),
+                      value: map['currentLessonCubit'] as CurrentLessonCubit,
+                      child:  PracticeListeningDetailPage(
+                          positionNow: map['positionNow'])),
               settings: settings);
         }
       case AppRoutes.kanji:
@@ -88,6 +92,28 @@ class AppRoutes {
                   BlocProvider.value(
                     value: map['listWordCubit'] as ListWordCubit,
                     child: const WordDetailPage(),
+                  ),
+              settings: settings);
+        }
+      case AppRoutes.wordFlashcard:
+        {
+          Map map = settings.arguments as Map;
+          return MaterialPageRoute(
+              builder: (context) =>
+                  BlocProvider.value(
+                    value: map['listWordCubit'] as ListWordCubit,
+                    child:  WordFlashCardPage(listWord: map['listWord']),
+                  ),
+              settings: settings);
+        }
+      case AppRoutes.wordPractice:
+        {
+          Map map = settings.arguments as Map;
+          return MaterialPageRoute(
+              builder: (context) =>
+                  BlocProvider.value(
+                    value: map['listWordCubit'] as ListWordCubit,
+                    child:  WordPracticePage(listWord: map['listWord']),
                   ),
               settings: settings);
         }

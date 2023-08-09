@@ -8,7 +8,9 @@ class SoundService {
 
   static SoundService get instance => _instance;
 
+  bool isMute = false;
   AudioPlayer? _player;
+  AudioPlayer? get player => _player;
 
   AudioPlayer newPlayer() {
     if (_player != null) {
@@ -19,7 +21,9 @@ class SoundService {
     }
 
     _player = AudioPlayer();
-
+    if(isMute) {
+      _player!.setVolume(0);
+    }
     return _player!;
   }
 
@@ -35,19 +39,38 @@ class SoundService {
     await _player?.seek(position);
   }
 
-  playSound(String sound) async {
+  playSound(String sound ,[Duration positionNow = Duration.zero]) async {
     var player = newPlayer();
     player.stop();
-    await player.setFilePath(sound);
+    await player.setFilePath(sound , initialPosition: positionNow);
     debugPrint('=>>>>>: ${player.duration}');
     player.play();
   }
 
+  playSoundNotCreateNew(String sound ,[Duration positionNow = Duration.zero]) async {
+    player?.stop();
+    await player?.setFilePath(sound , initialPosition: positionNow);
+    debugPrint('=>>>>>: ${player?.duration}');
+    player?.play();
+  }
+  playAsset(String asset) async {
+    var player = newPlayer();
+    player.stop();
+    await player.setAsset(asset);
+    debugPrint('=>>>>>: ${player.duration}');
+    player.play();
+  }
   pause() {
     _player?.pause();
   }
-
   resume() {
     _player?.play();
+  }
+
+  mute() {
+    isMute = true;
+  }
+  unMute() {
+    isMute = false;
   }
 }

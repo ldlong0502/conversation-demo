@@ -26,7 +26,8 @@ enum EnumAppText {
   txtBack,
   txtNotFoundLesson,
   txtSorry,
-  txtChallenge
+  txtChallenge,
+  txtFirstDownload
 }
 
 class AppTextTranslate {
@@ -67,6 +68,8 @@ class AppTextTranslate {
     EnumAppText.txtPrimary1: {'vi': 'Sơ cấp 1'},
 
     EnumAppText.txtChallenge: {'vi': 'Thử thách'},
+
+    EnumAppText.txtFirstDownload: {'vi': 'Đợi một chút...'},
 
   };
 

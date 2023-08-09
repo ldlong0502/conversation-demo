@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:untitled/configs/app_color.dart';
-import 'package:untitled/configs/app_style.dart';
 import 'package:untitled/features/grammar/grammar_item.dart';
-
 import '../../models/grammar.dart';
 
 class ListViewGrammar extends StatelessWidget {

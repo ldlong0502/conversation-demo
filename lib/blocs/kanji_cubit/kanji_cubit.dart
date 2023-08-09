@@ -1,9 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:untitled/blocs/list_kanji_cubit/list_kanji_cubit.dart';
 import 'package:untitled/repositories/kanji_repository.dart';
-
 import '../../models/kanji.dart';
 import '../../repositories/api_helper.dart';
 import '../../utils/split_text.dart';

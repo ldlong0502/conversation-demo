@@ -1,4 +1,3 @@
-import 'look_and_learn.dart';
 
 class Choice {
   final String id;

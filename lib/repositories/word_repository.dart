@@ -1,19 +1,6 @@
 
-import 'dart:io';
-
 import 'package:untitled/configs/app_config.dart';
-import 'package:untitled/models/choice.dart';
-import 'package:untitled/models/kanji.dart';
-import 'package:untitled/models/lesson.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart' as p;
-import 'package:flutter/services.dart' show rootBundle;
-import 'package:untitled/models/look_and_learn.dart';
-import 'package:untitled/models/vocabulary.dart';
-import 'package:untitled/repositories/database_kanji_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:untitled/repositories/database_word_helper.dart';
-
 import '../models/word.dart';
 import 'download_repository.dart';
 
@@ -52,4 +39,35 @@ class WordRepository {
   String getUrlAudioById(int id)  {
     return repo.getUrlAudioById(id, AppConfig.lesson_id, folder);
   }
+
+  Future insertWordFlashcardHighLight(value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> savedList = prefs.getStringList('list_word_flashcard_highlight') ?? [];
+    if(!savedList.contains(value)) {
+      savedList.add(value);
+    }
+    await prefs.setStringList('list_word_flashcard_highlight', savedList);
+  }
+  Future removeWordFlashcardHighLight(value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> savedList = prefs.getStringList('list_word_flashcard_highlight') ?? [];
+    if(savedList.contains(value)) {
+      savedList.remove(value);
+    }
+    await prefs.setStringList('list_word_flashcard_highlight', savedList);
+  }
+  Future<bool> checkKanjiHighLight(value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> savedList = prefs.getStringList('list_word_flashcard_highlight') ?? [];
+    if(savedList.contains(value)){
+      return true;
+    }
+    return false;
+  }
+  Future<List<String>> getListWordFlashcard() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> savedList = prefs.getStringList('list_word_flashcard_highlight') ?? [];
+    return savedList;
+  }
+
 }

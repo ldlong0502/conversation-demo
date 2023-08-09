@@ -1,26 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:untitled/blocs/download_cubit/download_cubit.dart';
+import 'package:untitled/configs/app_color.dart';
 import 'package:untitled/configs/app_config.dart';
-import 'package:untitled/models/choice.dart';
-import 'package:untitled/models/kanji.dart';
-import 'package:untitled/models/lesson.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart' as p;
-import 'package:flutter/services.dart' show rootBundle;
-import 'package:untitled/models/look_and_learn.dart';
-import 'package:untitled/models/vocabulary.dart';
-import 'package:untitled/repositories/database_kanji_helper.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:untitled/repositories/database_word_helper.dart';
-
-import '../models/word.dart';
+import 'package:untitled/enums/app_text.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:dio/dio.dart';
 import 'package:archive/archive.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sn_progress_dialog/sn_progress_dialog.dart';
+
 class DownloadRepository {
   DownloadRepository._privateConstructor();
 
@@ -30,14 +18,12 @@ class DownloadRepository {
 
   static DownloadRepository get instance => _instance;
 
-  final DatabaseWordHelper dataHelper = DatabaseWordHelper.instance;
-
-
   BuildContext? context;
 
-  void setContext(BuildContext ctx) {
+  setContext(BuildContext ctx) {
     context = ctx;
   }
+
   Future<File?> _downloadZipFile(
       String lessonId, String url, String folder) async {
     final appDocumentDir = await getApplicationDocumentsDirectory();
@@ -50,22 +36,43 @@ class DownloadRepository {
     } else {
       try {
         Dio dio = Dio();
-        Response response = await dio.get(url,
-            onReceiveProgress: (received, total) {
+        ProgressDialog pd = ProgressDialog(
+          context: context,
+        );
+        pd.show(
+            max: 100,
+            msg: AppTextTranslate.getTranslatedText(EnumAppText.txtFirstDownload),
+            progressType: ProgressType.valuable,
+            backgroundColor: AppColor.white,
+            barrierColor: Colors.black.withOpacity(0.5),
+            hideValue: true,
+            cancel: Cancel(
+                cancelImageColor: AppColor.red,
+                cancelImageSize: 20,
+                cancelImage: const AssetImage(
+                  'assets/images/ic_dialog_cancel.png'
+                ),
+                cancelClicked: () {
+                  pd.close();
+                  Navigator.pop(context!);
+                },
+                autoHidden: false),
+            msgColor: AppColor.blue);
+        Response response =
+            await dio.get(url, onReceiveProgress: (received, total) {
           if (total != -1) {
             debugPrint('=>>>>${received * 100 ~/ total}%');
-            if(context != null) {
-              context!.read<DownloadCubit>().updateProgress(received * 100 ~/ total);
-            }
-
+            int progress = (((received / total) * 100).toInt());
+            pd.update(value: progress);
+            
           }
-        },
-            options: Options(responseType: ResponseType.bytes));
-        if(response.statusCode == 200) {
+        }, options: Options(responseType: ResponseType.bytes));
+        if (response.statusCode == 200) {
           file.writeAsBytesSync(response.data);
+          debugPrint('=>>>>>>>>>>>>> File Saved: ${file.path}');
           return file;
         }
-       // Trả về đường dẫn tệp sau khi đã tải xuống
+        // Trả về đường dẫn tệp sau khi đã tải xuống
       } catch (e) {
         print('Lỗi khi tải xuống tệp: $e');
         return null;
@@ -76,7 +83,8 @@ class DownloadRepository {
   Future<void> downloadFileAndSave(
       String lessonId, String url, String folder) async {
     var zippedFile = await _downloadZipFile(lessonId, url, folder);
-    var bytes = zippedFile!.readAsBytesSync();
+    if (zippedFile == null) return;
+    var bytes = zippedFile.readAsBytesSync();
     var archive =
         ZipDecoder().decodeBytes(bytes, password: AppConfig.passwordUnzip);
 

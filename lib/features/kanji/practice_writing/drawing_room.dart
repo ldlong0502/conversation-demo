@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:untitled/blocs/kanji_cubit/kanji_cubit.dart';
 import 'package:untitled/configs/app_color.dart';
 import 'package:untitled/features/kanji/practice_writing/animate_kanji_draw.dart';
 import 'package:untitled/features/kanji/practice_writing/float_button_drawing.dart';
@@ -9,9 +8,6 @@ import '../../../blocs/kanji_practice_writing_cubit/kanji_practice_writing_cubit
 import '../../../blocs/list_kanji_cubit/list_kanji_cubit.dart';
 import '../../../models/drawing_point.dart';
 import '../../../models/kanji.dart';
-import '../../../utils/split_text.dart';
-import 'package:drawing_animation/drawing_animation.dart';
-import 'package:path_drawing/path_drawing.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'drawing_painter.dart';
 

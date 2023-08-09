@@ -1,11 +1,8 @@
-import 'dart:io';
-
 import 'package:untitled/models/lesson.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart' as p;
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:untitled/repositories/download_repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../configs/app_config.dart';
 
-import 'database_listening_helper.dart';
 class LessonRepository {
   LessonRepository._privateConstructor();
 
@@ -13,11 +10,62 @@ class LessonRepository {
 
   static LessonRepository get instance => _instance;
 
-  final DatabaseListeningHelper dataHelper = DatabaseListeningHelper.instance;
-  Future<List<Lesson>> getAllLessons() async{
+  final DownloadRepository repo = DownloadRepository.instance;
+  String url =  AppConfig.getUrlFileZipListening(AppConfig.listeningLessonId);
+  String folder = 'listening';
+  downloadFile() async {
+    await repo.downloadFileAndSave(AppConfig.listeningLessonId, url, folder);
+  }
+  Future<List<Lesson>> getLessons() async {
+    var listLesson = <Lesson>[];
+    final List<Map<String, dynamic>> result = await repo
+        .getJsonData(AppConfig.listeningLessonId, folder);
+    for (var item in result) {
+      if (result.isNotEmpty) {
+        listLesson.add(Lesson.fromJson(item));
+      }
+    }
+    return listLesson;
+  }
 
-    final List<Map<String, dynamic>> result = await dataHelper.queryAllRows('SELECT * FROM lesson where level = 51 or level = 52 or level = 53 ');
-    final listLessons = result.map((row) => Lesson.fromJson(row)).toList();
-    return listLessons;
+  String getUrlImageById(int id )  {
+    return repo.getUrlImageById(id , AppConfig.listeningLessonId, folder);
+  }
+
+  String getUrlAudioById(int id)  {
+    return repo.getUrlAudioById(id, AppConfig.listeningLessonId, folder);
+  }
+  Future setBlur(value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('blur', value);
+  }
+  Future<bool> getBlur() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isBlur;
+    isBlur = prefs.getBool('blur') ?? true;
+    setBlur(isBlur);
+    return isBlur;
+  }
+  Future setTranslate(value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('translate', value);
+  }
+  Future<bool> getTranslate() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isTranslate;
+    isTranslate = prefs.getBool('translate') ?? true;
+    setTranslate(isTranslate);
+    return isTranslate;
+  }
+  Future setPhonetic(value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('phonetic', value);
+  }
+  Future<bool> getPhonetic() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isPhonetic;
+    isPhonetic = prefs.getBool('phonetic') ?? true;
+    setPhonetic(isPhonetic);
+    return isPhonetic;
   }
 }

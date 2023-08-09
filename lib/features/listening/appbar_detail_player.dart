@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:untitled/blocs/practice_listening_cubit/conversation_player_cubit.dart';
+import 'package:untitled/blocs/practice_listening_cubit/current_lesson_cubit.dart';
 import 'package:untitled/configs/app_color.dart';
 import 'package:untitled/features/listening/listening_detail_action.dart';
 import 'package:untitled/features/listening/slider_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../models/lesson.dart';
-
 class AppbarDetailPlayer extends StatelessWidget {
-  const AppbarDetailPlayer({Key? key}) : super(key: key);
-
+  const AppbarDetailPlayer({Key? key, required this.positionNow}) : super(key: key);
+  final Duration positionNow;
   @override
   Widget build(BuildContext context) {
-    final cubit = context.watch<ConversationPlayerCubit>();
     return SafeArea(
       child: Container(
           decoration: BoxDecoration(
@@ -27,7 +24,7 @@ class AppbarDetailPlayer extends StatelessWidget {
           ),
           child: Column(
             children: [
-              headerTitle(context , cubit.state!),
+              headerTitle(context),
               const SizedBox(
                 height: 20,
               ),
@@ -35,13 +32,14 @@ class AppbarDetailPlayer extends StatelessWidget {
               const SizedBox(
                 height: 20,
               ),
-              const SliderBar()
+               SliderBar(positionNow: positionNow)
             ],
           )),
     );
   }
 
-  headerTitle(BuildContext context ,Lesson lesson) {
+  headerTitle(BuildContext context) {
+    final lesson = context.read<CurrentLessonCubit>().state!;
     return Row(
       children: [
         Expanded(
@@ -62,7 +60,7 @@ class AppbarDetailPlayer extends StatelessWidget {
             flex: 3,
             child: Center(
                 child: Text(
-                  lesson.vi,
+                  lesson.mean,
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                       color: AppColor.blue,
@@ -73,5 +71,4 @@ class AppbarDetailPlayer extends StatelessWidget {
       ],
     );
   }
-
 }

@@ -46,11 +46,11 @@ class VocabularyList extends StatelessWidget {
                       child: ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        itemCount: state!.length,
+                        itemCount: state.length,
                         itemBuilder: (context, index) {
                           return VocabularyItem(
                               audioPlayer: audioPlayer,
-                              vocabulary: state![index]);
+                              vocabulary: state[index]);
                         },
                       ),
                     ),

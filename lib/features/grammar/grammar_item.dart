@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:untitled/blocs/grammar_cubit/grammar_cubit.dart';
 import 'package:untitled/configs/app_color.dart';
 import 'package:untitled/configs/app_style.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:untitled/routes/app_routes.dart';
 import '../../models/grammar.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 class GrammarItem extends StatelessWidget {
   const GrammarItem({Key? key, required this.grammar}) : super(key: key);
   final Grammar grammar;
@@ -55,7 +53,7 @@ class GrammarItem extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        AutoSizeText(grammar.titleVi.toUpperCase(),
+                        AutoSizeText(grammar.mean.toUpperCase(),
                             style: AppStyle.kTitle, maxLines: 1),
                         Text('(${grammar.title})',
                             style: AppStyle.kSubTitle, maxLines: 1),
