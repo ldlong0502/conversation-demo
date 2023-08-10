@@ -91,15 +91,11 @@ class GridViewAction extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
       child: GridView.builder(
-        padding: const EdgeInsets.symmetric(
-          vertical: 0,
-        ),
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3,
-            crossAxisSpacing: 10,
-            childAspectRatio: 1,
+            crossAxisSpacing: 5,
             mainAxisSpacing: 0 // Số cột
             ),
         itemCount: listItems.length,
@@ -107,19 +103,21 @@ class GridViewAction extends StatelessWidget {
           return RawMaterialButton(
             onPressed: listItems[index]['onPress'] as Function(),
             shape: const CircleBorder(),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Image.asset(
-                  listItems[index]['iconUrl'] as String,
-                  height: 35,
-                  fit: BoxFit.cover,
-                  color: AppColor.white,
-                ),
-                Text(listItems[index]['title'] as String,
-                    style: AppStyle.kTitle
-                        .copyWith(color: AppColor.white, fontSize: 13)),
-              ],
+            child: FittedBox(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Image.asset(
+                    listItems[index]['iconUrl'] as String,
+                    fit: BoxFit.cover,
+                    height: 50,
+                    color: AppColor.white,
+                  ),
+                  Text(listItems[index]['title'] as String,
+                      style: AppStyle.kTitle
+                          .copyWith(color: AppColor.white , fontSize: 13)),
+                ],
+              ),
             ),
           );
         },

@@ -6,6 +6,7 @@ class AppConfig {
   static const lesson_id = '10501';
   static const listeningLessonId = '100534';
   static const grammarLessonId = '100507';
+  static const kanjiLessonId = '100513';
   static String getUrlFileZipVocabulary(String lessonId) {
     return '$endpoint/api/v1/mobile/static/get/?token=$tokenZip&name=vocabulary_$lessonId.zip';
   }
@@ -14,5 +15,8 @@ class AppConfig {
   }
   static String getUrlFileZipGrammar(String lessonId){
     return '$endpoint/api/v1/mobile/static/get/?token=$tokenZip&name=grammar_$lessonId.zip';
+  }
+  static String getUrlFileZipKanji(String lessonId){
+    return '$endpoint/api/v1/mobile/static/get/?token=$tokenZip&name=kanji_$lessonId.zip';
   }
 }

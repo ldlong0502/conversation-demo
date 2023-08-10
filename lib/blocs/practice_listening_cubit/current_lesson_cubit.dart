@@ -31,7 +31,7 @@ class CurrentLessonCubit extends Cubit<Lesson?> {
     var listLessons = context.read<ListeningListCubit>().state!;
     final index = listLessons.indexWhere((element) => element.id == state!.id);
     final nextIndex = index + 1 >= listLessons.length ? 0 : index + 1;
-    final path = LessonRepository.instance.getUrlAudioById(listLessons[nextIndex].id);
+    final path = LessonRepository.instance.getUrlAudioById(listLessons[nextIndex].id.toString());
     emit(listLessons[nextIndex]);
     await SoundService.instance.player!.setFilePath(path);
     SoundService.instance.player!.play();
@@ -40,7 +40,7 @@ class CurrentLessonCubit extends Cubit<Lesson?> {
     var listLessons = context.read<ListeningListCubit>().state!;
     final index = listLessons.indexWhere((element) => element.id == state!.id);
     final previousIndex = index - 1 < 0 ?  listLessons.length -1 : index - 1;
-    final path = LessonRepository.instance.getUrlAudioById(listLessons[previousIndex].id);
+    final path = LessonRepository.instance.getUrlAudioById(listLessons[previousIndex].id.toString());
     emit(listLessons[previousIndex]);
 
     await SoundService.instance.player!.setFilePath(path);

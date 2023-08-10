@@ -69,7 +69,7 @@ class WordFlashCardFrontItem extends StatelessWidget {
               ),
               Center(
                   child: Image.file(
-                File(repo.getUrlImageById(item.id)),
+                File(repo.getUrlImageById(item.id.toString())),
                 height: 150,
               )),
             ],

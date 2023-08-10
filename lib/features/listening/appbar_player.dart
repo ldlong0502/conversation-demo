@@ -21,7 +21,7 @@ class _AppbarPlayerState extends State<AppbarPlayer> {
   final soundService = SoundService.instance;
   onInit() async {
     final cubit = context.read<CurrentLessonCubit>();
-    final pathAudio = LessonRepository.instance.getUrlAudioById(cubit.state!.id);
+    final pathAudio = LessonRepository.instance.getUrlAudioById(cubit.state!.id.toString());
     await soundService.player!.setFilePath(pathAudio);
     soundService.player!.positionStream.listen((position) {
       if( soundService.player!.duration == null) return;
@@ -136,7 +136,7 @@ class _AppbarPlayerState extends State<AppbarPlayer> {
                             }
                             return IconButton(
                                 onPressed: ()  async {
-                                  final pathAudio = LessonRepository.instance.getUrlAudioById(state!.id);
+                                  final pathAudio = LessonRepository.instance.getUrlAudioById(state!.id.toString());
                                   await soundService.playSound(pathAudio);
                                 },
                                 iconSize: 40,

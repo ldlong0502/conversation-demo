@@ -26,7 +26,6 @@ class KanjiDetailPage extends StatefulWidget{
 class _KanjiDetailPageState extends State<KanjiDetailPage>  with SingleTickerProviderStateMixin {
   late AnimationController animationController;
   final kanjiCubit = KanjiCubit();
-  final kanjiVocabularyCubit = KanjiVocabularyCubit();
   @override
   void initState() {
     // TODO: implement initState
@@ -78,7 +77,7 @@ class _KanjiDetailPageState extends State<KanjiDetailPage>  with SingleTickerPro
                       KunyomiList(kanji: state),
                       OnyomiList(kanji: state),
                       RadicalList(kanji: state),
-                      VocabularyList(kanjiVocabularyCubit: kanjiVocabularyCubit),
+                      const VocabularyList(),
                       const SizedBox(height: 100,)
                     ],
                   ),
@@ -92,15 +91,12 @@ class _KanjiDetailPageState extends State<KanjiDetailPage>  with SingleTickerPro
                     final previousIndex = index - 1 < 0   ? listKanjis.length - 1 : index - 1;
                      kanjiCubit.updateKanji(listKanjis[previousIndex]);
                     animationController.forward(from: 0);
-                    kanjiVocabularyCubit.updateKanji(listKanjis[previousIndex]);
 
                   },
                   onNext: () async {
                     final nextIndex = index + 1 >=  listKanjis.length ? 0 : index + 1;
                     kanjiCubit.updateKanji(listKanjis[nextIndex]);
                     animationController.forward(from: 0);
-                    kanjiVocabularyCubit.updateKanji(listKanjis[nextIndex]);
-
                   })
             ],
           ));

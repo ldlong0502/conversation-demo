@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:untitled/repositories/database_kanji_helper.dart';
 import 'package:untitled/routes/app_routes.dart';
 import 'package:flutter/services.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await DatabaseKanjiHelper.instance.unzipFileFromAssets('assets/databases/kanji.zip');
-
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(const MyApp());
 }

@@ -5,6 +5,7 @@ import 'package:untitled/features/kanji/grid_view_kanji.dart';
 import '../../configs/app_color.dart';
 import '../../enums/app_text.dart';
 import '../../models/kanji.dart';
+import '../../repositories/download_repository.dart';
 import '../../widgets/app_bar_custom.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -15,6 +16,7 @@ class KanjiPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    DownloadRepository.instance.setContext(context);
     return SafeArea(
       child: Scaffold(
         appBar: PreferredSize(

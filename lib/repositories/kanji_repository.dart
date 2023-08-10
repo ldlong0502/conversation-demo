@@ -1,10 +1,9 @@
 
-import 'package:untitled/models/choice.dart';
 import 'package:untitled/models/kanji.dart';
-import 'package:untitled/models/look_and_learn.dart';
-import 'package:untitled/models/vocabulary.dart';
-import 'package:untitled/repositories/database_kanji_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:untitled/repositories/download_repository.dart';
+
+import '../configs/app_config.dart';
 
 class KanjiRepository {
   KanjiRepository._privateConstructor();
@@ -13,43 +12,30 @@ class KanjiRepository {
 
   static KanjiRepository get instance => _instance;
 
-  final DatabaseKanjiHelper dataHelper = DatabaseKanjiHelper.instance;
-  Future<List<Kanji>> getAllKanjis() async{
-
-    final List<Map<String, dynamic>> result = await dataHelper.queryAllRows('SELECT * FROM kanji where lesson_id = 1');
-    final listKanjis = result.map((row) => Kanji.fromJson(row)).toList();
-    return listKanjis;
+  final DownloadRepository repo = DownloadRepository.instance;
+  String url =  AppConfig.getUrlFileZipKanji(AppConfig.kanjiLessonId);
+  String folder = 'kanji';
+  downloadFile() async {
+    await repo.downloadFileAndSave(AppConfig.kanjiLessonId, url, folder);
   }
-  Future<List<Kanji>> getKanjisNotBaseOnLesson(int limit) async{
-    if(limit == 0) return <Kanji>[];
-    final List<Map<String, dynamic>> result = await dataHelper.queryAllRows('SELECT * FROM kanji where lesson_id != 1 ORDER BY RANDOM() limit $limit');
-    final listKanjis = result.map((row) => Kanji.fromJson(row)).toList();
-    return listKanjis;
-  }
-
-  Future<List<Vocabulary>> getVocabularies(List<int> listId) async{
-    var listVocs = <Vocabulary>[];
-    for(var item in listId) {
-      final List<Map<String, dynamic>> result = await dataHelper.queryAllRows('SELECT * FROM relation where id = $item');
-      if(result.isNotEmpty) {
-        listVocs.add(Vocabulary.fromJson(result[0]));
+  Future<List<Kanji>> getKanjis() async {
+    var listKanji= <Kanji>[];
+    final List<Map<String, dynamic>> result = await repo
+        .getJsonData(AppConfig.kanjiLessonId, folder);
+    for (var item in result) {
+      if (result.isNotEmpty) {
+        listKanji.add(Kanji.fromJson(item));
       }
-
     }
-
-    return listVocs;
-  }
-  Future<LookAndLearn> getLookAndLearnById(String id) async{
-    final List<Map<String, dynamic>> result = await dataHelper.queryAllRows('SELECT * FROM look_and_learn where id = $id');
-    if(result.isNotEmpty) {
-      return LookAndLearn.fromJson(result[0]);
-    }
-    return LookAndLearn(id: '', en: '', vi: '');
+    return listKanji;
   }
 
-  Future<List<Choice>> getChoices() async{
-    final List<Map<String, dynamic>> result = await dataHelper.queryAllRows('SELECT * FROM jlpt ORDER BY RANDOM() LIMIT 42');
-    return result.map((row) => Choice.fromJson(row)).toList();
+  String getUrlImageById(String id)  {
+    return repo.getUrlImageById(id , AppConfig.kanjiLessonId, folder);
+  }
+
+  String getUrlAudioById(String id)  {
+    return repo.getUrlAudioById(id, AppConfig.kanjiLessonId, folder);
   }
   Future insertKanjiHighLight(value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

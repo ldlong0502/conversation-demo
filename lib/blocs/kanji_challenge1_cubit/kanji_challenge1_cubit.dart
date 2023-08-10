@@ -10,10 +10,41 @@ class KanjiChallenge1Cubit extends Cubit<KanjiChallenge1State> {
   KanjiChallenge1Cubit() : super(KanjiChallenge1Initial());
   final repo = KanjiRepository.instance;
   final audioPlayer = AudioPlayer();
-
+  List<String> listKanjiFalse = <String>[];
+  
+  void createListKanjiFalse(List<Kanji> listKanjis) {
+    final listWord = listKanjis.map((e) => e.kanji).toList();
+    for(var i in listKanjis) {
+      for(var voc in i.vocabularies) {
+        List<String> characters = voc.word.split('');
+        for (var char in characters) {
+          if (!listWord.contains(char)) {
+            listKanjiFalse.add(char);
+          }
+        }
+      }
+    }
+  }
   void getData(List<Kanji> listKanjis) async {
     final limit = 16 - listKanjis.length > 0 ? 16 - listKanjis.length : 0;
-    var listNotBaseOnLesson = await repo.getKanjisNotBaseOnLesson(limit);
+    createListKanjiFalse(listKanjis);
+    listKanjiFalse.shuffle();
+    var listNotBaseOnLesson = listKanjiFalse.take(limit).map((e) =>
+        Kanji(vocabularies: [],
+            onyomi: '',
+            lookAndLearnId: -1,
+            radical: '',
+            kanji: e,
+            lookAndLearn: '',
+            lessonId: -1,
+            path: '',
+            search: '',
+            mean: '',
+            parts: '',
+            id: -1,
+            kunyomi: '',
+            order: -1,
+            radicalId: -1)).toList();
     var listQuestion = List.of(listKanjis);
     var temp = List.of(listKanjis);
     temp.addAll(listNotBaseOnLesson);
@@ -39,12 +70,8 @@ class KanjiChallenge1Cubit extends Cubit<KanjiChallenge1State> {
     if (state is KanjiChallenge1Loaded) {
       final stateNow = state as KanjiChallenge1Loaded;
       var listQuestion = stateNow.listQuestion;
-      final limit = 16 - listQuestion.length > 0 ? 16 - listQuestion.length : 0;
-      var listNotBaseOnLesson = await repo.getKanjisNotBaseOnLesson(limit);
-      var temp = List.of(listQuestion);
-      temp.addAll(listNotBaseOnLesson);
-      var listDataAnswer = temp.map((e) {
-        return {'item': e, 'status': 'none'};
+      var listDataAnswer = stateNow.listDataAnswer.map((e) {
+        return {'item': e['item'], 'status': 'none'};
       }).toList();
       listQuestion.shuffle();
       listDataAnswer.shuffle();

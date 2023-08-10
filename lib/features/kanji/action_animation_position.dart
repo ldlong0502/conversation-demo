@@ -13,10 +13,19 @@ class ActionAnimationPosition extends StatefulWidget {
 }
 
 class _ActionAnimationPositionState extends State<ActionAnimationPosition> {
-  double offset = -130;
+  double offset = 0;
   bool isDragUp = false;
   @override
+  void didChangeDependencies() {
+    final size = MediaQuery.of(context).size;
+    setState(() {
+      offset = - size.height * 0.3 + 50;
+    });
+    super.didChangeDependencies();
+  }
+  @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return  AnimatedPositioned(
         duration: const Duration(milliseconds: 500),
         bottom: offset,
@@ -26,7 +35,7 @@ class _ActionAnimationPositionState extends State<ActionAnimationPosition> {
           onVerticalDragUpdate: (value) {
             double currentDragY = MediaQuery.of(context).size.height -
                 value.globalPosition.dy -
-                150;
+                size.height * 0.3 - 20;
             setState(() {
               if (offset < currentDragY) {
                 isDragUp = true;
@@ -37,8 +46,8 @@ class _ActionAnimationPositionState extends State<ActionAnimationPosition> {
 
               if (offset > 20) {
                 offset = 20;
-              } else if (offset < -130) {
-                offset = -130;
+              } else if (offset < -size.height * 0.3 + 50) {
+                offset = -size.height * 0.3 + 50;
               }
             });
           },
@@ -47,7 +56,7 @@ class _ActionAnimationPositionState extends State<ActionAnimationPosition> {
               if (isDragUp) {
                 offset = 20;
               } else {
-                offset = -130;
+                offset = -size.height * 0.3 + 50;
               }
             });
           },
@@ -59,7 +68,7 @@ class _ActionAnimationPositionState extends State<ActionAnimationPosition> {
                       color: AppColor.blue,
                       borderRadius:
                       BorderRadius.all(Radius.circular(25))),
-                  height: 170,
+                  height: MediaQuery.of(context).size.height * 0.3,
                   child:  GridViewAction(listKanjis: widget.listKanjis,)),
               Positioned(
                   top: 0,
@@ -72,7 +81,7 @@ class _ActionAnimationPositionState extends State<ActionAnimationPosition> {
                     child: GestureDetector(
                       onTap: () {
                         setState(() {
-                          offset = -130;
+                          offset = -size.height * 0.3 + 50;
                         });
                       },
                       child: Container(
@@ -112,7 +121,7 @@ class _ActionAnimationPositionState extends State<ActionAnimationPosition> {
                           });
                         },
                         child: Container(
-                          height: 40,
+                          height: 50,
                           decoration: const BoxDecoration(
                               color: AppColor.blue,
                               borderRadius: BorderRadius.only(
@@ -122,7 +131,7 @@ class _ActionAnimationPositionState extends State<ActionAnimationPosition> {
                               child: Text(
                                 AppTextTranslate.getTranslatedText(EnumAppText.txtPractice),
                                 style: AppStyle.kTitle.copyWith(
-                                    fontSize: 18, color: AppColor.white),
+                                    fontSize: 18, color: AppColor.white ,),
                               )),
                         ),
                       ),

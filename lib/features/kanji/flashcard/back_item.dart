@@ -38,7 +38,7 @@ class BackItem extends StatelessWidget {
                       AutoSizeText(item.kanji , style: AppStyle.kTitle.copyWith(
                           fontSize: 50
                       ),),
-                      AutoSizeText(item.vi , style: AppStyle.kTitle.copyWith(
+                      AutoSizeText(item.mean , style: AppStyle.kTitle.copyWith(
                           fontSize: 20
                       ),),
                     ],

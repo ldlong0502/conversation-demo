@@ -57,7 +57,7 @@ class WordFlashCardBackItem extends StatelessWidget {
 
               GestureDetector(
                 onTap: () async {
-                  String path = repo.getUrlAudioById(item.id);
+                  String path = repo.getUrlAudioById(item.id.toString());
 
                   if (File(path).existsSync()) {
                     await SoundService.instance.playSound(path);

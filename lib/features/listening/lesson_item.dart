@@ -171,7 +171,7 @@ class _LessonItemState extends State<LessonItem> {
           lessonCubit.load(lesson2.copyWith(
             isLoading: true
           ));
-          final pathAudio = LessonRepository.instance.getUrlAudioById(lesson2.id);
+          final pathAudio = LessonRepository.instance.getUrlAudioById(lesson2.id.toString());
           lessonCubit.load(lesson2.copyWith(
               isLoading: false
           ));

@@ -60,7 +60,7 @@ class Challenge1Page extends StatelessWidget {
                               Expanded(
                                   child: Center(
                                 child: Text(
-                                  state.listQuestion[state.indexCurrent].vi,
+                                  state.listQuestion[state.indexCurrent].mean,
                                   textAlign: TextAlign.center,
                                   style: AppStyle.kTitle.copyWith(
                                     color: AppColor.green,

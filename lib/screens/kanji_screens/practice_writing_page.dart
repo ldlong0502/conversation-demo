@@ -98,7 +98,7 @@ class PracticeWritingPage extends StatelessWidget {
                               )),
                           Expanded(
                               child: Text(
-                            state.kanji.vi,
+                            state.kanji.mean,
                             style: AppStyle.kTitle.copyWith(fontSize: 25),
                           ))
                         ],

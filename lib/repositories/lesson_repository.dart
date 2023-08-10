@@ -28,11 +28,11 @@ class LessonRepository {
     return listLesson;
   }
 
-  String getUrlImageById(int id )  {
+  String getUrlImageById(String id )  {
     return repo.getUrlImageById(id , AppConfig.listeningLessonId, folder);
   }
 
-  String getUrlAudioById(int id)  {
+  String getUrlAudioById(String id)  {
     return repo.getUrlAudioById(id, AppConfig.listeningLessonId, folder);
   }
   Future setBlur(value) async {

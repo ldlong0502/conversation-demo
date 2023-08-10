@@ -92,7 +92,7 @@ class DownloadRepository {
       if (file.isFile) {
         final data = file.content as List<int>;
         final filePath =
-            '${destinationDir!.path}/$lessonId/$folder/${file.name}';
+            '${destinationDir!.path}/$folder/${file.name}';
         if (!File(filePath).existsSync()) {
           File(filePath)
             ..createSync(recursive: true)
@@ -105,16 +105,16 @@ class DownloadRepository {
   Future<List<Map<String, dynamic>>> getJsonData(
       String lessonId, String folder) async {
     final jsonData =
-        await File('${destinationDir!.path}/$lessonId/$folder/$folder.json')
+        await File('${destinationDir!.path}/$folder/$folder.json')
             .readAsString();
     return List<Map<String, dynamic>>.from(json.decode(jsonData));
   }
 
-  String getUrlImageById(int id, String lessonId, String folder) {
-    return File('${destinationDir!.path}//$lessonId/$folder/$id.png').path;
+  String getUrlImageById(String id, String lessonId, String folder) {
+    return File('${destinationDir!.path}/$folder/$id.png').path;
   }
 
-  String getUrlAudioById(int id, String lessonId, String folder) {
-    return File('${destinationDir!.path}//$lessonId/$folder/$id.mp3').path;
+  String getUrlAudioById(String id, String lessonId, String folder) {
+    return File('${destinationDir!.path}/$folder/$id.mp3').path;
   }
 }

@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:untitled/configs/app_color.dart';
 import 'package:untitled/configs/app_style.dart';
 import 'package:untitled/features/kanji/detail/furigana_column_text.dart';
-import 'package:untitled/models/vocabulary.dart';
-
-import '../../../repositories/audio_helper.dart';
-import 'package:just_audio/just_audio.dart';
+import 'package:untitled/models/vocabulary_kanji.dart';
+import 'package:untitled/repositories/kanji_repository.dart';
+import '../../../services/sound_service.dart';
 
 class VocabularyItem extends StatelessWidget {
-  const VocabularyItem({Key? key, required this.audioPlayer, required this.vocabulary}) : super(key: key);
-  final AudioPlayer audioPlayer;
-  final Vocabulary vocabulary;
+  const VocabularyItem({Key? key, required this.vocabulary}) : super(key: key);
+  final VocabularyKanji vocabulary;
   @override
   Widget build(BuildContext context) {
+    final soundService = SoundService.instance;
+    final repo = KanjiRepository.instance;
     return Container(
       height: 50,
       margin: const EdgeInsets.symmetric(vertical: 5),
@@ -23,11 +23,9 @@ class VocabularyItem extends StatelessWidget {
         children: [
           Expanded(
             child: GestureDetector(
-              onTap: () async {
-                final path = await AudioHelper.instance.getPathFileVocabulary(vocabulary.id);
-                if(path == '') return;
-                await audioPlayer.setFilePath(path);
-                await audioPlayer.play();
+              onTap: () {
+                final path =  repo.getUrlAudioById(vocabulary.id.toString());
+                soundService.playSound(path);
               },
               child: Container(
                   alignment: Alignment.centerLeft,
@@ -62,7 +60,7 @@ class VocabularyItem extends StatelessWidget {
           Expanded(
               flex: 4,
               child: Text(
-                vocabulary.vi,
+                vocabulary.mean,
                 style: AppStyle.kTitle,
                 maxLines: 2,
               )),

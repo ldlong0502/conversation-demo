@@ -60,7 +60,7 @@ class GridViewKanji extends StatelessWidget {
                             : AppColor.white,
                         fontSize: 20),
                   ),
-                  Text(listKanjis[index].vi,
+                  Text(listKanjis[index].mean,
                       style: AppStyle.kTitle.copyWith(
                         color: !listKanjis[index].isHighLight
                             ? AppColor.blue

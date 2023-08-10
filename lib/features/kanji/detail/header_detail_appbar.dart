@@ -139,7 +139,7 @@ class _HeaderDetailAppbarState extends State<HeaderDetailAppbar>  with SingleTic
                     ),
                   ),
                   Text(
-                    widget.kanji.vi,
+                    widget.kanji.mean,
                     style: AppStyle.kTitle.copyWith(color: Colors.black, fontSize: 18),
                   )
                 ],

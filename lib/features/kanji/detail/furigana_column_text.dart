@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/configs/app_style.dart';
-import 'package:untitled/models/vocabulary.dart';
+import 'package:untitled/models/vocabulary_kanji.dart';
 
 import '../../../utils/split_text.dart';
 
 class FuriganaColumnText extends StatelessWidget {
   const FuriganaColumnText({Key? key, required this.vocabulary}) : super(key: key);
-  final Vocabulary vocabulary;
+  final VocabularyKanji vocabulary;
   @override
   Widget build(BuildContext context) {
     var list = SplitText().splitFuriganaVoc(vocabulary.furigana);

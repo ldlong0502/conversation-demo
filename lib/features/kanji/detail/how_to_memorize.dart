@@ -6,6 +6,7 @@ import 'package:untitled/configs/app_color.dart';
 import 'package:untitled/configs/app_style.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:untitled/features/kanji/detail/corner_title.dart';
+import 'package:untitled/repositories/kanji_repository.dart';
 import 'package:untitled/widgets/loading_progress.dart';
 import '../../../enums/app_text.dart';
 import '../../../models/kanji.dart';
@@ -16,8 +17,8 @@ class HowToMemorize extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cubit = context.watch<KanjiCubit>();
-    cubit.getImageUsage(context);
+    final repo = KanjiRepository.instance;
+    final path = repo.getUrlImageById('lal${kanji.id}');
     return Container(
         height: 150,
         width: double.infinity,
@@ -28,9 +29,7 @@ class HowToMemorize extends StatelessWidget {
         ),
         child: Stack(
             children: [
-              cubit.state!.lookAndLearn == null
-                  ? const LoadingProgress()
-                  : Column(
+             Column(
                 children: [
                   const SizedBox(height: 20,),
                   Expanded(
@@ -38,14 +37,14 @@ class HowToMemorize extends StatelessWidget {
                       child: Align(
                           alignment: Alignment.center,
                           child: Image.file(
-                            File(cubit.state!.lookAndLearn!.imageUrl),
+                            File(path),
                             errorBuilder: (context, error, stackTrace) =>
-                                Container(),))),
+                                Text('Not found', style: AppStyle.kTitle.copyWith(color: AppColor.white),),))),
                   Expanded(
                       child:
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: Text(cubit.state!.lookAndLearn!.vi,
+                        child: Text(kanji.lookAndLearn,
                           textAlign: TextAlign.center,
                           maxLines: 2,
                           style: AppStyle.kTitle.copyWith(

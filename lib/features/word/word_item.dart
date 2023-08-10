@@ -48,7 +48,7 @@ class WordItem extends StatelessWidget {
                 child: Row(
                   children: [
                     Expanded(
-                      child: Image.file(File(repo.getUrlImageById(word.id)))
+                      child: Image.file(File(repo.getUrlImageById(word.id.toString())))
                     ),
                     Expanded(
                       child: Column(
@@ -67,7 +67,7 @@ class WordItem extends StatelessWidget {
                           ),),
                           GestureDetector(
                             onTap: () async {
-                              String path =repo.getUrlAudioById(word.id);
+                              String path =repo.getUrlAudioById(word.id.toString());
 
                               if(File(path).existsSync()) {
                                 await SoundService.instance.playSound(path);

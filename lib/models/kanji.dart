@@ -1,97 +1,97 @@
-import 'package:untitled/models/vocabulary.dart';
-
-import 'look_and_learn.dart';
+import 'package:untitled/models/vocabulary_kanji.dart';
 
 class Kanji {
-  final String id;
-  final String lessonId;
-  final String kanji;
-  final String order1;
-  final String vocabularies;
-  final String radicalId;
-  final String radical;
-  final String parts;
-  final String kunyomi;
+  final List<VocabularyKanji> vocabularies;
   final String onyomi;
-  final String vi;
-  final String search;
+  final int lookAndLearnId;
+  final String radical;
+  final String kanji;
+  final String lookAndLearn;
+  final int lessonId;
   final String path;
+  final String search;
+  final String mean;
+  final String parts;
+  final int id;
+  final String kunyomi;
+  final int order;
+  final int radicalId;
   bool isHighLight;
-  LookAndLearn? lookAndLearn;
-  List<Vocabulary>? listVocs;
+
   Kanji({
-    required this.id,
-    required this.lessonId,
-    required this.kanji,
-    required this.order1,
     required this.vocabularies,
-    required this.radicalId,
-    required this.radical,
-    required this.parts,
-    required this.kunyomi,
     required this.onyomi,
-    required this.vi,
-    required this.search,
+    required this.lookAndLearnId,
+    required this.radical,
+    required this.kanji,
+    required this.lookAndLearn,
+    required this.lessonId,
     required this.path,
+    required this.search,
+    required this.mean,
+    required this.parts,
+    required this.id,
+    required this.kunyomi,
+    required this.order,
+    required this.radicalId,
     this.isHighLight = false,
-    this.lookAndLearn,
-    this.listVocs
   });
 
   Kanji copyWith({
-     String? id,
-     String? lessonId,
-     String? kanji,
-     String? order1,
-     String? vocabularies,
-     String? radicalId,
-     String? radical,
-     String? parts,
-     String? kunyomi,
-     String? onyomi,
-     String? vi,
-     String? search,
-     String? path,
+    List<VocabularyKanji>? vocabularies,
+    String? onyomi,
+    int? lookAndLearnId,
+    String? radical,
+    String? kanji,
+    String? lookAndLearn,
+    int? lessonId,
+    String? path,
+    String? search,
+    String? mean,
+    String? parts,
+    int? id,
+    String? kunyomi,
+    int? order,
+    int? radicalId,
     bool? isHighLight,
-    LookAndLearn? lookAndLearn,
-    List<Vocabulary>? listVocs,
-
   }) {
     return Kanji(
-        id: id ?? this.id,
-        lessonId: lessonId ?? this.lessonId,
-        kanji: kanji ?? this.kanji,
-        order1: order1 ?? this.order1,
-        vocabularies: vocabularies ?? this.vocabularies,
-        radicalId: radicalId ?? this.radicalId,
-        radical: radical ?? this.radical,
-        parts: parts ?? this.parts,
-        kunyomi: kunyomi ?? this.kunyomi,
-        onyomi: onyomi ?? this.onyomi,
-        vi: vi ?? this.vi,
-        search: search ?? this.search,
-        path: path ?? this.path,
-      isHighLight: isHighLight ?? this.isHighLight,
+      vocabularies: vocabularies ?? this.vocabularies,
+      onyomi: onyomi ?? this.onyomi,
+      lookAndLearnId: lookAndLearnId ?? this.lookAndLearnId,
+      radical: radical ?? this.radical,
+      kanji: kanji ?? this.kanji,
       lookAndLearn: lookAndLearn ?? this.lookAndLearn,
-      listVocs: listVocs ?? this.listVocs
-      ,);
+      lessonId: lessonId ?? this.lessonId,
+      path: path ?? this.path,
+      search: search ?? this.search,
+      mean: mean ?? this.mean,
+      parts: parts ?? this.parts,
+      id: id ?? this.id,
+      kunyomi: kunyomi ?? this.kunyomi,
+      order: order ?? this.order,
+      radicalId: radicalId ?? this.radicalId,
+      isHighLight: isHighLight ?? this.isHighLight,
+    );
   }
 
   factory Kanji.fromJson(Map<String, dynamic> json) {
     return Kanji(
-      id: json['id'] ?? '',
-      lessonId: json['lesson_id'] ?? '',
-      kanji: json['kanji'] ?? '',
-      order1: json['order1'] ?? '',
-      vocabularies: json['vocabularies'] ?? '',
-      radicalId: json['radical_id'] ?? '',
-      radical: json['radical'] ?? '',
-      parts: json['parts'] ?? '',
-      kunyomi: json['kunyomi'] ?? '',
+      vocabularies: List<VocabularyKanji>.from(json["vocabularies"].map((x) => VocabularyKanji.fromJson(x))) ?? [],
       onyomi: json['onyomi'] ?? '',
-      vi: json['vi'] ?? '',
-      search: json['search'] ?? '',
+      lookAndLearnId: json['look_and_learn_id'] ?? '',
+      radical: json['radical'] ?? '',
+      kanji: json['kanji'] ?? '',
+      lookAndLearn: json['look_and_learn'] ?? '',
+      lessonId: json['lesson_id'] ?? '',
       path: json['path'] ?? '',
+      search: json['search'] ?? '',
+      mean: json['mean'] ?? '',
+      parts: json['parts'] ?? '',
+      id: json['id'] ?? '',
+      kunyomi: json['kunyomi'] ?? '',
+      order: json['order'] ?? '',
+      radicalId: json['radical_id'] ?? '',
     );
   }
 }

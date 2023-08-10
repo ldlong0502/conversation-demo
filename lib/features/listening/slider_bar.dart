@@ -32,7 +32,7 @@ class _SliderBarState extends State<SliderBar> {
     final lesson = context.read<CurrentLessonCubit>();
     lesson.setIsDetailPage(true);
     final pathAudio =
-        LessonRepository.instance.getUrlAudioById(lesson.state!.id);
+        LessonRepository.instance.getUrlAudioById(lesson.state!.id.toString());
     await soundService.playSoundNotCreateNew(pathAudio , widget.positionNow);
     soundService.player!.positionStream.listen((position) {
       if(soundService.player!.duration == null) return;

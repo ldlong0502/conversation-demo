@@ -32,11 +32,11 @@ class WordRepository {
     return listWord;
   }
 
-  String getUrlImageById(int id )  {
+  String getUrlImageById(String id )  {
     return repo.getUrlImageById(id , AppConfig.lesson_id, folder);
   }
 
-  String getUrlAudioById(int id)  {
+  String getUrlAudioById(String id)  {
     return repo.getUrlAudioById(id, AppConfig.lesson_id, folder);
   }
 

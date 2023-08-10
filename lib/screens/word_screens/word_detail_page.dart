@@ -23,6 +23,7 @@ class WordDetailPage extends StatelessWidget {
     final index = wordCubit.listWord
         .indexWhere((element) => element.id == wordCubit.word.id);
     final max = wordCubit.listWord.length;
+
     return Stack(
       children: [
         Scaffold(
@@ -38,6 +39,8 @@ class WordDetailPage extends StatelessWidget {
           body: BlocBuilder<ListWordCubit, ListWordState>(
             builder: (context, state) {
               if (state is ListWordLoaded) {
+                final path = repo.getUrlImageById(state.word.id.toString());
+                debugPrint('=>>>>>>$path}');
                 return SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
                   child: Column(
@@ -57,7 +60,7 @@ class WordDetailPage extends StatelessWidget {
                                     border: Border.all(color: AppColor.grey)),
                                 child: Center(
                                   child: Image.file(
-                                    File(repo.getUrlImageById(state.word.id)),
+                                    File(path),
                                     height: 120,
                                   ),
                                 ),
@@ -80,7 +83,7 @@ class WordDetailPage extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: () async {
-                          String path = repo.getUrlAudioById(state.word.id);
+                          String path = repo.getUrlAudioById(state.word.id.toString());
 
                           if (File(path).existsSync()) {
                             await SoundService.instance.playSound(path);
